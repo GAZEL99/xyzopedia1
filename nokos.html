@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nomor Virtual - Xyzopedia</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #5865F2;
+            --primary-dark: #4752C4;
+            --secondary: #f4f6f9;
+            --light: #ffffff;
+            --dark: #1e1f22;
+            --darker: #121215;
+            --dark-text: #dbdee1;
+            --success: #3BA55D;
+            --danger: #ED4245;
+            --warning: #FAA61A;
+            --reseller: #FF9F43;
+            --card-bg: #ffffff;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .dark-mode {
+            --primary: #5865F2;
+            --primary-dark: #4752C4;
+            --secondary: #2b2d31;
+            --light: #1e1f22;
+            --dark: #dbdee1;
+            --darker: #121215;
+            --dark-text: #dbdee1;
+            --card-bg: #2b2d31;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f7;
+            color: #333;
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+
+        body.dark-mode {
+            background-color: var(--darker);
+            color: var(--dark-text);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: var(--darker);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+
+        .dark-mode .navbar {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo i {
+            color: var(--primary);
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(30deg);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), 
+                        url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            padding: 6rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), rgba(88, 101, 242, 0.7));
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .hero .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            opacity: 0.9;
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .dark-mode .section-title h2 {
+            color: var(--dark-text);
+        }
+
+        .section-title p {
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        .dark-mode .section-title p {
+            color: #aaa;
+        }
+
+        /* Search Box */
+        .search-container {
+            margin: 2rem auto;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 1rem 1.5rem 1rem 3rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: var(--light);
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            color: var(--dark);
+        }
+
+        .dark-mode .search-box {
+            background: var(--card-bg);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: var(--dark-text);
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+        }
+
+        /* Country List */
+        .country-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .country-item {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dark-mode .country-item {
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .country-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .country-item:hover {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .country-info {
+            flex: 1;
+        }
+
+        .country-name {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--dark);
+        }
+
+        .dark-mode .country-name {
+            color: var(--dark-text);
+        }
+
+        .country-flag {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .stock {
+            color: #666;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .dark-mode .stock {
+            color: #aaa;
+        }
+
+        .price-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .price {
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 4px rgba(88, 101, 242, 0.3);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--darker);
+            color: white;
+            padding: 3rem 0 1.5rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-logo i {
+            color: var(--primary);
+        }
+
+        .footer-logo span {
+            color: var(--primary);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1.1rem;
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-link {
+            color: #aaa;
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .footer-link:hover {
+            color: var(--primary);
+        }
+
+        .copyright {
+            margin-top: 1.5rem;
+            color: #777;
+            font-size: 0.85rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .country-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Ripple Effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.7);
+            transform: scale(0);
+            animation: ripple 600ms linear;
+            pointer-events: none;
+        }
+        
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-content">
+            <div class="logo">
+                <i class="fas fa-sim-card"></i>
+                <span>Xyzopedia</span>
+            </div>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Nomor Virtual Whatsapp</h1>
+            <p>Dapatkan nomor virtual dari berbagai negara untuk kebutuhan verifikasi akun Anda</p>
+        </div>
+    </section>
+
+    <section class="main-content">
+        <div class="container">
+            <div class="section-title">
+                <h2>Pilihan Nomor Virtual</h2>
+                <p>Tanyakan stok terlebih dahulu ke admin sebelum memesan</p>
+            </div>
+
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-box" placeholder="Cari negara...">
+            </div>
+
+            <ul class="country-list">
+                <li class="country-item">
+                    <div class="country-info">
+                        <div class="country-name">
+                            <img src="https://flagcdn.com/w20/id.png" class="country-flag" alt="Indonesia">
+                            Indonesia
+                        </div>
+                        <div class="stock">
+                            <i class="fas fa-box-open"></i>
+                            Stok: Tanyakan Admin
+                        </div>
+                    </div>
+                    <div class="price-container">
+                        <div class="price">Rp 8.000</div>
+                        <button class="btn btn-primary" onclick="window.location.href='pay.html?plan=Nomor%20Indonesia&price=8000'">
+                            <i class="fas fa-shopping-cart"></i> Beli
+                        </button>
+                    </div>
+                </li>
+                
+                <li class="country-item">
+                    <div class="country-info">
+                        <div class="country-name">
+                            <img src="https://flagcdn.com/w20/my.png" class="country-flag" alt="Malaysia">
+                            Malaysia
+                        </div>
+                        <div class="stock">
+                            <i class="fas fa-box-open"></i>
+                            Stok: Tanyakan Admin
+                        </div>
+                    </div>
+                    <div class="price-container">
+                        <div class="price">Rp 8.000</div>
+                        <button class="btn btn-primary" onclick="window.location.href='pay.html?plan=Nomor%20Malaysia&price=8000'">
+                            <i class="fas fa-shopping-cart"></i> Beli
+                        </button>
+                    </div>
+                </li>
+                
+                <li class="country-item">
+                    <div class="country-info">
+                        <div class="country-name">
+                            <img src="https://flagcdn.com/w20/ru.png" class="country-flag" alt="Russia">
+                            Russia
+                        </div>
+                        <div class="stock">
+                            <i class="fas fa-box-open"></i>
+                            Stok: Tanyakan Admin
+                        </div>
+                    </div>
+                    <div class="price-container">
+                        <div class="price">Rp 8.000</div>
+                        <button class="btn btn-primary" onclick="window.location.href='pay.html?plan=Nomor%20Russia&price=8000'">
+                            <i class="fas fa-shopping-cart"></i> Beli
+                        </button>
+                    </div>
+                </li>
+                
+                <li class="country-item">
+                    <div class="country-info">
+                        <div class="country-name">
+                            <img src="https://flagcdn.com/w20/cn.png" class="country-flag" alt="China">
+                            China
+                        </div>
+                        <div class="stock">
+                            <i class="fas fa-box-open"></i>
+                            Stok: Tanyakan Admin
+                        </div>
+                    </div>
+                    <div class="price-container">
+                        <div class="price">Rp 8.000</div>
+                        <button class="btn btn-primary" onclick="window.location.href='pay.html?plan=Nomor%20China&price=8000'">
+                            <i class="fas fa-shopping-cart"></i> Beli
+                        </button>
+                    </div>
+                </li>
+                
+                <li class="country-item">
+                    <div class="country-info">
+                        <div class="country-name">
+                            <img src="https://flagcdn.com/w20/fr.png" class="country-flag" alt="France">
+                            France
+                        </div>
+                        <div class="stock">
+                            <i class="fas fa-box-open"></i>
+                            Stok: Tanyakan Admin
+                        </div>
+                    </div>
+                    <div class="price-container">
+                        <div class="price">Rp 8.000</div>
+                        <button class="btn btn-primary" onclick="window.location.href='pay.html?plan=Nomor%20France&price=8000'">
+                            <i class="fas fa-shopping-cart"></i> Beli
+                        </button>
+                    </div>
+                </li>
+                
+                <li class="country-item">
+                    <div class="country-info">
+                        <div class="country-name">
+                            <img src="https://flagcdn.com/w20/us.png" class="country-flag" alt="USA">
+                            USA
+                        </div>
+                        <div class="stock">
+                            <i class="fas fa-box-open"></i>
+                            Stok: Tanyakan Admin
+                        </div>
+                    </div>
+                    <div class="price-container">
+                        <div class="price">Rp 8.000</div>
+                        <button class="btn btn-primary" onclick="window.location.href='pay.html?plan=Nomor%20USA&price=8000'">
+                            <i class="fas fa-shopping-cart"></i> Beli
+                        </button>
+                    </div>
+                </li>
+                
+                <li class="country-item">
+                    <div class="country-info">
+                        <div class="country-name">
+                            <img src="https://flagcdn.com/w20/au.png" class="country-flag" alt="Australia">
+                            Australia
+                        </div>
+                        <div class="stock">
+                            <i class="fas fa-box-open"></i>
+                            Stok: Tanyakan Admin
+                        </div>
+                    </div>
+                    <div class="price-container">
+                        <div class="price">Rp 8.000</div>
+                        <button class="btn btn-primary" onclick="window.location.href='pay.html?plan=Nomor%20Australia&price=8000'">
+                            <i class="fas fa-shopping-cart"></i> Beli
+                        </button>
+                    </div>
+                </li>
+                
+                <li class="country-item">
+                    <div class="country-info">
+                        <div class="country-name">
+                            <img src="https://flagcdn.com/w20/in.png" class="country-flag" alt="India">
+                            India
+                        </div>
+                        <div class="stock">
+                            <i class="fas fa-box-open"></i>
+                            Stok: Tanyakan Admin
+                        </div>
+                    </div>
+                    <div class="price-container">
+                        <div class="price">Rp 8.000</div>
+                        <button class="btn btn-primary" onclick="window.location.href='pay.html?plan=Nomor%20India&price=8000'">
+                            <i class="fas fa-shopping-cart"></i> Beli
+                        </button>
+                    </div>
+                </li>
+                
+                <li class="country-item">
+                    <div class="country-info">
+                        <div class="country-name">
+                            <img src="https://flagcdn.com/w20/nl.png" class="country-flag" alt="Netherlands">
+                            Netherlands
+                        </div>
+                        <div class="stock">
+                            <i class="fas fa-box-open"></i>
+                            Stok: Tanyakan Admin
+                        </div>
+                    </div>
+                    <div class="price-container">
+                        <div class="price">Rp 8.000</div>
+                        <button class="btn btn-primary" onclick="window.location.href='pay.html?plan=Nomor%20Netherlands&price=8000'">
+                            <i class="fas fa-shopping-cart"></i> Beli
+                        </button>
+                    </div>
+                </li>
+                
+                <li class="country-item">
+                    <div class="country-info">
+                        <div class="country-name">
+                            <img src="https://flagcdn.com/w20/tr.png" class="country-flag" alt="Turkey">
+                            Turkey
+                        </div>
+                        <div class="stock">
+                            <i class="fas fa-box-open"></i>
+                            Stok: Tanyakan Admin
+                        </div>
+                    </div>
+                    <div class="price-container">
+                        <div class="price">Rp 8.000</div>
+                        <button class="btn btn-primary" onclick="window.location.href='pay.html?plan=Nomor%20Turkey&price=8000'">
+                            <i class="fas fa-shopping-cart"></i> Beli
+                        </button>
+                    </div>
+                </li>
+                
+                <li class="country-item">
+                    <div class="country-info">
+                        <div class="country-name">
+                            <img src="https://flagcdn.com/w20/th.png" class="country-flag" alt="Thailand">
+                            Thailand
+                        </div>
+                        <div class="stock">
+                            <i class="fas fa-box-open"></i>
+                            Stok: Tanyakan Admin
+                        </div>
+                    </div>
+                    <div class="price-container">
+                        <div class="price">Rp 8.000</div>
+                        <button class="btn btn-primary" onclick="window.location.href='pay.html?plan=Nomor%20Thailand&price=8000'">
+                            <i class="fas fa-shopping-cart"></i> Beli
+                        </button>
+                    </div>
+                </li>
+                
+                <li class="country-item">
+                    <div class="country-info">
+                        <div class="country-name">
+                            <img src="https://flagcdn.com/w20/gb.png" class="country-flag" alt="England">
+                            England
+                        </div>
+                        <div class="stock">
+                            <i class="fas fa-box-open"></i>
+                            Stok: Tanyakan Admin
+                        </div>
+                    </div>
+                    <div class="price-container">
+                        <div class="price">Rp 8.000</div>
+                        <button class="btn btn-primary" onclick="window.location.href='pay.html?plan=Nomor%20England&price=8000'">
+                            <i class="fas fa-shopping-cart"></i> Beli
+                        </button>
+                    </div>
+                </li>
+                
+                <li class="country-item">
+                    <div class="country-info">
+                        <div class="country-name">
+                            <img src="https://flagcdn.com/w20/co.png" class="country-flag" alt="Colombia">
+                            Colombia
+                        </div>
+                        <div class="stock">
+                            <i class="fas fa-box-open"></i>
+                            Stok: Tanyakan Admin
+                        </div>
+                    </div>
+                    <div class="price-container">
+                        <div class="price">Rp 8.000</div>
+                        <button class="btn btn-primary" onclick="window.location.href='pay.html?plan=Nomor%20Colombia&price=8000'">
+                            <i class="fas fa-shopping-cart"></i> Beli
+                        </button>
+                    </div>
+                </li>
+                
+                <li class="country-item">
+                    <div class="country-info">
+                        <div class="country-name">
+                            <img src="https://flagcdn.com/w20/de.png" class="country-flag" alt="Germany">
+                            Germany
+                        </div>
+                        <div class="stock">
+                            <i class="fas fa-box-open"></i>
+                            Stok: Tanyakan Admin
+                        </div>
+                    </div>
+                    <div class="price-container">
+                        <div class="price">Rp 8.000</div>
+                        <button class="btn btn-primary" onclick="window.location.href='pay.html?plan=Nomor%20Germany&price=8000'">
+                            <i class="fas fa-shopping-cart"></i> Beli
+                        </button>
+                    </div>
+                </li>
+                
+                <li class="country-item">
+                    <div class="country-info">
+                        <div class="country-name">
+                            <img src="https://flagcdn.com/w20/ph.png" class="country-flag" alt="Philippines">
+                            Philippines
+                        </div>
+                        <div class="stock">
+                            <i class="fas fa-box-open"></i>
+                            Stok: Tanyakan Admin
+                        </div>
+                    </div>
+                    <div class="price-container">
+                        <div class="price">Rp 8.000</div>
+                        <button class="btn btn-primary" onclick="window.location.href='pay.html?plan=Nomor%20Philippines&price=8000'">
+                            <i class="fas fa-shopping-cart"></i> Beli
+                        </button>
+                    </div>
+                </li>
+                
+                <li class="country-item">
+                    <div class="country-info">
+                        <div class="country-name">
+                            <img src="https://flagcdn.com/w20/br.png" class="country-flag" alt="Brazil">
+                            Brazil
+                        </div>
+                        <div class="stock">
+                            <i class="fas fa-box-open"></i>
+                            Stok: Tanyakan Admin
+                        </div>
+                    </div>
+                    <div class="price-container">
+                        <div class="price">Rp 8.000</div>
+                        <button class="btn btn-primary" onclick="window.location.href='pay.html?plan=Nomor%20Brazil&price=8000'">
+                            <i class="fas fa-shopping-cart"></i> Beli
+                        </button>
+                    </div>
+                </li>
+                
+                <li class="country-item">
+                    <div class="country-info">
+                        <div class="country-name">
+                            <img src="https://flagcdn.com/w20/jp.png" class="country-flag" alt="Japan">
+                            Japan
+                        </div>
+                        <div class="stock">
+                            <i class="fas fa-box-open"></i>
+                            Stok: Tanyakan Admin
+                        </div>
+                    </div>
+                    <div class="price-container">
+                        <div class="price">Rp 8.000</div>
+                        <button class="btn btn-primary" onclick="window.location.href='pay.html?plan=Nomor%20Japan&price=8000'">
+                            <i class="fas fa-shopping-cart"></i> Beli
+                        </button>
+                    </div>
+                </li>
+                
+                <li class="country-item">
+                    <div class="country-info">
+                        <div class="country-name">
+                            <img src="https://flagcdn.com/w20/bt.png" class="country-flag" alt="Bhutan">
+                            Bhutan
+                        </div>
+                        <div class="stock">
+                            <i class="fas fa-box-open"></i>
+                            Stok: Tanyakan Admin
+                        </div>
+                    </div>
+                    <div class="price-container">
+                        <div class="price">Rp 8.000</div>
+                        <button class="btn btn-primary" onclick="window.location.href='pay.html?plan=Nomor%20Bhutan&price=8000'">
+                            <i class="fas fa-shopping-cart"></i> Beli
+                        </button>
+                    </div>
+                </li>
+                
+                <li class="country-item">
+                    <div class="country-info">
+                        <div class="country-name">
+                            <img src="https://flagcdn.com/w20/kz.png" class="country-flag" alt="Kazakhstan">
+                            Kazakhstan
+                        </div>
+                        <div class="stock">
+                            <i class="fas fa-box-open"></i>
+                            Stok: Tanyakan Admin
+                        </div>
+                    </div>
+                    <div class="price-container">
+                        <div class="price">Rp 8.000</div>
+                        <button class="btn btn-primary" onclick="window.location.href='pay.html?plan=Nomor%20Kazakhstan&price=8000'">
+                            <i class="fas fa-shopping-cart"></i> Beli
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-sim-card"></i>
+                    <span>Xyzopedia</span>
+                </div>
+                <div class="social-links">
+                    <a href="https://wa.me/6285189139082" target="_blank" class="social-link">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="https://t.me/" target="_blank" class="social-link">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                   
+                    <a href="#" target="_blank" class="social-link">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Beranda</a>
+                    <a href="#" class="footer-link">Kebijakan Privasi</a>
+                    <a href="#" class="footer-link">Syarat & Ketentuan</a>
+                </div>
+                <div class="copyright">
+                    &copy; 2025 Xyzopedia. All Rights Reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        // Check for saved theme preference or use preferred color scheme
+        const savedTheme = localStorage.getItem('theme') || 
+                        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+        // Apply the saved theme
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        } else {
+            body.classList.remove('dark-mode');
+            themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+        }
+
+        // Toggle theme on button click
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            // Update icon and save preference
+            if (body.classList.contains('dark-mode')) {
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Search functionality
+        document.querySelector('.search-box').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const items = document.querySelectorAll('.country-item');
+            
+            items.forEach(item => {
+                const countryName = item.querySelector('.country-name').textContent.toLowerCase();
+                if (countryName.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // Ripple effect for buttons
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const circle = document.createElement("span");
+            const diameter = Math.max(button.clientWidth, button.clientHeight);
+            const radius = diameter / 2;
+            
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
+            circle.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
+            circle.classList.add("ripple");
+            
+            const ripple = button.getElementsByClassName("ripple")[0];
+            if (ripple) {
+                ripple.remove();
+            }
+            
+            button.appendChild(circle);
+        }
+        
+        const buttons = document.querySelectorAll(".btn");
+        buttons.forEach(button => {
+            button.addEventListener("click", createRipple);
+        });
+    </script>
+</body>
+</html>

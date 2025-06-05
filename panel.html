@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pterodactyl Panel Hosting</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root {
+            --primary: #5865F2;
+            --primary-dark: #4752C4;
+            --secondary: #f4f6f9;
+            --light: #ffffff;
+            --dark: #1e1f22;
+            --darker: #121215;
+            --dark-text: #dbdee1;
+            --success: #3BA55D;
+            --danger: #ED4245;
+            --warning: #FAA61A;
+            --reseller: #FF9F43;
+            --card-bg: #ffffff;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .dark-mode {
+            --primary: #5865F2;
+            --primary-dark: #4752C4;
+            --secondary: #2b2d31;
+            --light: #1e1f22;
+            --dark: #dbdee1;
+            --darker: #121215;
+            --dark-text: #dbdee1;
+            --card-bg: #2b2d31;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f7;
+            color: #333;
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+
+        body.dark-mode {
+            background-color: var(--darker);
+            color: var(--dark-text);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: var(--darker);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+
+        .dark-mode .navbar {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(30deg);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), 
+                        url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            padding: 6rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), rgba(88, 101, 242, 0.7));
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .hero .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            opacity: 0.9;
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.9rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            animation: fadeInUp 0.8s ease 0.4s forwards;
+            opacity: 0;
+            border: 2px solid transparent;
+        }
+
+        .cta-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(88, 101, 242, 0.3);
+        }
+
+        /* Pricing Section */
+        .pricing {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .dark-mode .section-title h2 {
+            color: var(--dark-text);
+        }
+
+        .section-title p {
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        .dark-mode .section-title p {
+            color: #aaa;
+        }
+
+        /* Pricing Grid */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .pricing-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+
+        .dark-mode .pricing-card {
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .pricing-card:hover {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .pricing-card.reseller {
+            border: 2px solid var(--reseller);
+        }
+
+        .pricing-card.popular::before {
+            content: 'POPULAR';
+            position: absolute;
+            top: 15px;
+            right: -30px;
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 2rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transform: rotate(45deg);
+            z-index: 1;
+        }
+
+        /* Pricing Header */
+        .pricing-header {
+            background: var(--primary);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .pricing-header.reseller {
+            background: var(--reseller);
+        }
+
+        .pricing-header h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 1rem 0;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .price span {
+            font-size: 1rem;
+            font-weight: normal;
+            margin-top: 0.5rem;
+        }
+
+        /* Pricing Body */
+        .pricing-body {
+            padding: 1.5rem;
+        }
+
+        .dark-mode .pricing-body {
+            color: var(--dark-text);
+        }
+
+        .specs {
+            margin-bottom: 1.5rem;
+        }
+
+        .spec {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+        }
+
+        .spec i {
+            color: var(--primary);
+            margin-right: 0.8rem;
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .pricing-card.reseller .spec i {
+            color: var(--reseller);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            transition: var(--transition);
+            width: 100%;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.3);
+        }
+
+        .btn-reseller {
+            background: var(--reseller);
+            color: white;
+        }
+
+        .btn-reseller:hover {
+            background: #e08a1e;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 159, 67, 0.3);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 4rem 0;
+            background: var(--secondary);
+        }
+
+        .dark-mode .features {
+            background: var(--darker);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 0.8rem;
+            color: var(--dark);
+        }
+
+        .dark-mode .feature-card h3 {
+            color: var(--dark-text);
+        }
+
+        .feature-card p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .dark-mode .feature-card p {
+            color: #aaa;
+        }
+
+        /* CTA End Section */
+        .cta-end {
+            background: var(--card-bg);
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .cta-end h2 {
+            color: var(--dark);
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .dark-mode .cta-end h2 {
+            color: var(--dark-text);
+        }
+
+        .cta-end p {
+            max-width: 600px;
+            margin: 1rem auto;
+            font-size: 1.1rem;
+            color: var(--dark-text);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--darker);
+            color: white;
+            padding: 3rem 0 1.5rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-logo i {
+            color: var(--primary);
+        }
+
+        .footer-logo span {
+            color: var(--primary);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1.1rem;
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-link {
+            color: #aaa;
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .footer-link:hover {
+            color: var(--primary);
+        }
+
+        .copyright {
+            margin-top: 1.5rem;
+            color: #777;
+            font-size: 0.85rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-card.popular::before {
+                right: -25px;
+                font-size: 0.7rem;
+                padding: 0.2rem 1.5rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+        }
+        /* Footer Styles */
+/* Enhanced Footer Styles */
+footer {
+    background: var(--darker);
+    color: var(--dark-text);
+    padding: 4rem 0 0;
+    font-size: 0.95rem;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 3rem;
+    margin-bottom: 3rem;
+}
+
+.footer-col {
+    margin-bottom: 2rem;
+}
+
+.footer-col h3 {
+    color: white;
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 0.8rem;
+}
+
+.footer-col h3::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 50px;
+    height: 3px;
+    background: var(--primary);
+    border-radius: 3px;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-top: 1.5rem;
+    color: white;
+}
+
+.footer-logo i {
+    color: var(--primary);
+    font-size: 1.6rem;
+}
+
+.footer-links {
+    list-style: none;
+}
+
+.footer-links li {
+    margin-bottom: 0.8rem;
+}
+
+.footer-links a {
+    color: #aaa;
+    text-decoration: none;
+    transition: var(--transition);
+    display: inline-block;
+    padding: 0.2rem 0;
+}
+
+.footer-links a:hover {
+    color: var(--primary);
+    transform: translateX(8px);
+}
+
+.contact-info {
+    list-style: none;
+    margin-top: 1.5rem;
+}
+
+.contact-info li {
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.contact-info i {
+    color: var(--primary);
+    width: 20px;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.payment-methods {
+    margin-top: 2rem;
+}
+
+.payment-methods h4 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: #aaa;
+}
+
+.payment-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    align-items: center;
+}
+
+.payment-icons img {
+    height: 30px;
+    width: auto;
+    object-fit: contain;
+    filter: grayscale(30%);
+    transition: var(--transition);
+    border-radius: 4px;
+    background: rgba(255,255,255,0.1);
+    padding: 0.3rem;
+}
+
+.payment-icons img:hover {
+    filter: grayscale(0%);
+    transform: translateY(-3px);
+    background: rgba(255,255,255,0.2);
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+    margin: 1.5rem 0 2rem;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 1.2rem;
+    transition: var(--transition);
+}
+
+.social-link:hover {
+    background: var(--primary);
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 5px 15px rgba(88, 101, 242, 0.3);
+}
+
+.newsletter {
+    margin-top: 2.5rem;
+}
+
+.newsletter h4 {
+    font-size: 1.1rem;
+    margin-bottom: 1.2rem;
+    color: #aaa;
+}
+
+.newsletter form {
+    display: flex;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.newsletter input {
+    flex: 1;
+    padding: 0.9rem 1rem;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 0.9rem;
+}
+
+.newsletter input::placeholder {
+    color: #ccc;
+}
+
+.newsletter button {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 0 1.5rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.newsletter button:hover {
+    background: var(--primary-dark);
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.copyright {
+    color: #777;
+    font-size: 0.85rem;
+}
+
+.developer-credit {
+    color: #777;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+/* Responsive Footer */
+@media (max-width: 768px) {
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .footer-col {
+        margin-bottom: 2.5rem;
+    }
+    
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .payment-icons {
+        justify-content: flex-start;
+    }
+    
+    .newsletter form {
+        max-width: 100%;
+    }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+<div class="container nav-content">
+<div class="logo">
+<i class="fas fa-server"></i>
+<span>Xyzopedia</span>
+</div>
+<button class="theme-toggle" id="themeToggle">
+<i class="fas fa-moon"></i>
+</button>
+</div>
+</nav>
+<section class="hero">
+<div class="container">
+<h1>Panel Pterodactyl Berkualitas</h1>
+<p>Solusi server dengan performa tinggi dan harga terjangkau. Kelola server Anda dengan mudah melalui panel Pterodactyl.</p>
+<a class="cta-button" href="#pricing">
+<i class="fas fa-rocket"></i> Lihat Paket
+            </a>
+</div>
+</section>
+<section class="features">
+<div class="container">
+<div class="section-title">
+<h2>Keunggulan Kami</h2>
+<p>Mengapa memilih layanan panel Pterodactyl dari kami?</p>
+</div>
+<div class="features-grid">
+<div class="feature-card">
+<div class="feature-icon">
+<i class="fas fa-bolt"></i>
+</div>
+<h3>Performa Tinggi</h3>
+<p>Server dengan hardware terbaik untuk performa optimal dan stabilitas maksimal.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">
+<i class="fas fa-shield-alt"></i>
+</div>
+<h3>Keamanan Terjamin</h3>
+<p>Sistem keamanan berlapis dan perlindungan DDoS untuk server Anda.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">
+<i class="fas fa-headset"></i>
+</div>
+<h3>Support 24/7</h3>
+<p>Tim support siap membantu Anda kapan saja melalui berbagai channel.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">
+<i class="fas fa-sliders-h"></i>
+</div>
+<h3>Kontrol Penuh</h3>
+<p>Panel kontrol intuitif dengan akses penuh ke semua fitur server.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="pricing" id="pricing">
+<div class="container">
+<div class="section-title">
+<h2>Pilihan Spesifikasi</h2>
+<p>Pilih spesifikasi yang sesuai dengan kebutuhan</p>
+</div>
+<div class="pricing-grid">
+<div class="pricing-card">
+<div class="pricing-header">
+<h3>RAM 2GB</h3>
+<div class="price">Rp1.000<span>/bulan</span></div>
+</div>
+<div class="pricing-body">
+<div class="specs">
+<div class="spec">
+<i class="fas fa-memory"></i>
+<span>RAM: 16GB</span>
+</div>
+<div class="spec">
+<i class="fas fa-microchip"></i>
+<span>Core: 8</span>
+</div>
+<div class="spec">
+<i class="fas fa-shield-alt"></i>
+<span>Garansi: 7 Hari</span>
+</div>
+<div class="spec">
+<i class="fas fa-sync-alt"></i>
+<span>Replace: 1x</span>
+</div>
+</div>
+<a class="btn btn-primary" href="pay.html?plan=RAM%202GB&amp;cpu=8%20Core&amp;price=1000">
+<i class="fas fa-shopping-cart"></i> Pesan Sekarang
+      </a>
+</div>
+</div>
+<div class="pricing-card">
+<div class="pricing-header">
+<h3>RAM 3GB</h3>
+<div class="price">Rp2.000<span>/bulan</span></div>
+</div>
+<div class="pricing-body">
+<div class="specs">
+<div class="spec">
+<i class="fas fa-memory"></i>
+<span>RAM: 16GB</span>
+</div>
+<div class="spec">
+<i class="fas fa-microchip"></i>
+<span>Core: 8</span>
+</div>
+<div class="spec">
+<i class="fas fa-shield-alt"></i>
+<span>Garansi: 7 Hari</span>
+</div>
+<div class="spec">
+<i class="fas fa-sync-alt"></i>
+<span>Replace: 1x</span>
+</div>
+</div>
+<a class="btn btn-primary" href="pay.html?plan=RAM%203GB&amp;cpu=8%20Core&amp;price=2000">
+<i class="fas fa-shopping-cart"></i> Pesan Sekarang
+      </a>
+</div>
+</div>
+<div class="pricing-card">
+<div class="pricing-header">
+<h3>RAM 4GB</h3>
+<div class="price">Rp3.000<span>/bulan</span></div>
+</div>
+<div class="pricing-body">
+<div class="specs">
+<div class="spec">
+<i class="fas fa-memory"></i>
+<span>RAM: 16GB</span>
+</div>
+<div class="spec">
+<i class="fas fa-microchip"></i>
+<span>Core: 8</span>
+</div>
+<div class="spec">
+<i class="fas fa-shield-alt"></i>
+<span>Garansi: 7 Hari</span>
+</div>
+<div class="spec">
+<i class="fas fa-sync-alt"></i>
+<span>Replace: 1x</span>
+</div>
+</div>
+<a class="btn btn-primary" href="pay.html?plan=RAM%204GB&amp;cpu=8%20Core&amp;price=3000">
+<i class="fas fa-shopping-cart"></i> Pesan Sekarang
+      </a>
+</div>
+</div>
+<div class="pricing-card">
+<div class="pricing-header">
+<h3>RAM 5GB</h3>
+<div class="price">Rp4.000<span>/bulan</span></div>
+</div>
+<div class="pricing-body">
+<div class="specs">
+<div class="spec">
+<i class="fas fa-memory"></i>
+<span>RAM: 16GB</span>
+</div>
+<div class="spec">
+<i class="fas fa-microchip"></i>
+<span>Core: 8</span>
+</div>
+<div class="spec">
+<i class="fas fa-shield-alt"></i>
+<span>Garansi: 7 Hari</span>
+</div>
+<div class="spec">
+<i class="fas fa-sync-alt"></i>
+<span>Replace: 1x</span>
+</div>
+</div>
+<a class="btn btn-primary" href="pay.html?plan=RAM%205GB&amp;cpu=8%20Core&amp;price=4000">
+<i class="fas fa-shopping-cart"></i> Pesan Sekarang
+      </a>
+</div>
+</div>
+<div class="pricing-card">
+<div class="pricing-header">
+<h3>RAM 6GB</h3>
+<div class="price">Rp5.000<span>/bulan</span></div>
+</div>
+<div class="pricing-body">
+<div class="specs">
+<div class="spec">
+<i class="fas fa-memory"></i>
+<span>RAM: 16GB</span>
+</div>
+<div class="spec">
+<i class="fas fa-microchip"></i>
+<span>Core: 8</span>
+</div>
+<div class="spec">
+<i class="fas fa-shield-alt"></i>
+<span>Garansi: 7 Hari</span>
+</div>
+<div class="spec">
+<i class="fas fa-sync-alt"></i>
+<span>Replace: 1x</span>
+</div>
+</div>
+<a class="btn btn-primary" href="pay.html?plan=RAM%206GB&amp;cpu=8%20Core&amp;price=5000">
+<i class="fas fa-shopping-cart"></i> Pesan Sekarang
+      </a>
+</div>
+</div>
+<div class="pricing-card">
+<div class="pricing-header">
+<h3>RAM 7GB</h3>
+<div class="price">Rp6.000<span>/bulan</span></div>
+</div>
+<div class="pricing-body">
+<div class="specs">
+<div class="spec">
+<i class="fas fa-memory"></i>
+<span>RAM: 16GB</span>
+</div>
+<div class="spec">
+<i class="fas fa-microchip"></i>
+<span>Core: 8</span>
+</div>
+<div class="spec">
+<i class="fas fa-shield-alt"></i>
+<span>Garansi: 7 Hari</span>
+</div>
+<div class="spec">
+<i class="fas fa-sync-alt"></i>
+<span>Replace: 1x</span>
+</div>
+</div>
+<a class="btn btn-primary" href="pay.html?plan=RAM%207GB&amp;cpu=8%20Core&amp;price=6000">
+<i class="fas fa-shopping-cart"></i> Pesan Sekarang
+      </a>
+</div>
+</div>
+<div class="pricing-card">
+<div class="pricing-header">
+<h3>RAM 8GB</h3>
+<div class="price">Rp7.000<span>/bulan</span></div>
+</div>
+<div class="pricing-body">
+<div class="specs">
+<div class="spec">
+<i class="fas fa-memory"></i>
+<span>RAM: 16GB</span>
+</div>
+<div class="spec">
+<i class="fas fa-microchip"></i>
+<span>Core: 8</span>
+</div>
+<div class="spec">
+<i class="fas fa-shield-alt"></i>
+<span>Garansi: 7 Hari</span>
+</div>
+<div class="spec">
+<i class="fas fa-sync-alt"></i>
+<span>Replace: 1x</span>
+</div>
+</div>
+<a class="btn btn-primary" href="pay.html?plan=RAM%208GB&amp;cpu=8%20Core&amp;price=7000">
+<i class="fas fa-shopping-cart"></i> Pesan Sekarang
+      </a>
+</div>
+</div>
+<div class="pricing-card">
+<div class="pricing-header">
+<h3>RAM 9GB</h3>
+<div class="price">Rp8.000<span>/bulan</span></div>
+</div>
+<div class="pricing-body">
+<div class="specs">
+<div class="spec">
+<i class="fas fa-memory"></i>
+<span>RAM: 16GB</span>
+</div>
+<div class="spec">
+<i class="fas fa-microchip"></i>
+<span>Core: 8</span>
+</div>
+<div class="spec">
+<i class="fas fa-shield-alt"></i>
+<span>Garansi: 7 Hari</span>
+</div>
+<div class="spec">
+<i class="fas fa-sync-alt"></i>
+<span>Replace: 1x</span>
+</div>
+</div>
+<a class="btn btn-primary" href="pay.html?plan=RAM%209GB&amp;cpu=8%20Core&amp;price=8000">
+<i class="fas fa-shopping-cart"></i> Pesan Sekarang
+      </a>
+</div>
+</div>
+<div class="pricing-card">
+<div class="pricing-header">
+<h3>RAM 10GB</h3>
+<div class="price">Rp9.000<span>/bulan</span></div>
+</div>
+<div class="pricing-body">
+<div class="specs">
+<div class="spec">
+<i class="fas fa-memory"></i>
+<span>RAM: 16GB</span>
+</div>
+<div class="spec">
+<i class="fas fa-microchip"></i>
+<span>Core: 8</span>
+</div>
+<div class="spec">
+<i class="fas fa-shield-alt"></i>
+<span>Garansi: 7 Hari</span>
+</div>
+<div class="spec">
+<i class="fas fa-sync-alt"></i>
+<span>Replace: 1x</span>
+</div>
+</div>
+<a class="btn btn-primary" href="pay.html?plan=RAM%2010GB&amp;cpu=8%20Core&amp;price=9000">
+<i class="fas fa-shopping-cart"></i> Pesan Sekarang
+      </a>
+</div>
+</div>
+<div class="pricing-card">
+<div class="pricing-header">
+<h3>RAM UNLIMITED</h3>
+<div class="price">Rp10.000<span>/bulan</span></div>
+</div>
+<div class="pricing-body">
+<div class="specs">
+<div class="spec">
+<i class="fas fa-memory"></i>
+<span>RAM: 16GB</span>
+</div>
+<div class="spec">
+<i class="fas fa-microchip"></i>
+<span>Core: 8</span>
+</div>
+<div class="spec">
+<i class="fas fa-shield-alt"></i>
+<span>Garansi: 7 Hari</span>
+</div>
+<div class="spec">
+<i class="fas fa-sync-alt"></i>
+<span>Replace: 1x</span>
+</div>
+</div>
+<a class="btn btn-primary" href="pay.html?plan=RAM%2016GB&amp;cpu=8%20Core&amp;price=10000">
+<i class="fas fa-shopping-cart"></i> Pesan Sekarang
+      </a>
+</div>
+</div>
+<div class="pricing-card reseller">
+<div class="pricing-header reseller">
+<h3>Paket Reseller</h3>
+<div class="price">Rp12.000<span>/bulan</span></div>
+</div>
+<div class="pricing-body">
+<div class="specs">
+<div class="spec">
+<i class="fas fa-users"></i>
+<span>Server Private</span>
+</div>
+<div class="spec">
+<i class="fas fa-server"></i>
+<span>Server Fast Respons</span>
+</div>
+<div class="spec">
+<i class="fas fa-microchip"></i>
+<span>CPU: Custom</span>
+</div>
+<div class="spec">
+<i class="fas fa-hdd"></i>
+<span>Replace 1x </span>
+</div>
+<div class="spec">
+<i class="fas fa-crown"></i>
+<span>Prioritas Support</span>
+</div>
+</div>
+<a class="btn btn-reseller" href="pay.html?plan=Paket%20Reseller&amp;cpu=Custom%20Core&amp;price=12000">
+<i class="fas fa-store"></i> Jadi Reseller
+                        </a>
+</div>
+</div>
+</div>
+</section>
+
+<footer>
+ <footer>
+    <div class="container">
+        <div class="footer-grid">
+            <!-- About Column -->
+            <div class="footer-col">
+                <h3>Tentang Xyzopedia</h3>
+                <p>Penyedia layanan panel Pterodactyl berkualitas dengan performa tinggi dan harga terjangkau di Tasikmalaya, Jawa Barat.</p>
+                <div class="footer-logo">
+                    <i class="fas fa-server"></i>
+                    <span>XyzopediaMarket</span>
+                </div>
+            </div>
+
+            <!-- Quick Links Column -->
+            <div class="footer-col">
+                <h3>Link Cepat</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Beranda</a></li>
+                    <li><a href="#pricing">Paket Layanan</a></li>
+                    <li><a href="#">Tutorial Panel</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Kebijakan Privasi</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact Column -->
+            <div class="footer-col">
+                <h3>Kontak Kami</h3>
+                <ul class="contact-info">
+                    <li><i class="fas fa-envelope"></i> xyzopedia@gmail.com</li>
+                    <li><i class="fas fa-phone-alt"></i> 0851-8913-9082</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Jawa Barat,Tasikmalaya</li>
+                </ul>
+                
+
+            <!-- Social Media Column -->
+            <div class="footer-col">
+                <h3>Media Sosial</h3>
+                <div class="social-links">
+                    <a href="https://wa.me/6285189139082" target="_blank" title="WhatsApp">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="https:" target="_blank" title="Tiktok">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                    <a href="#" target="_blank" title="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+                
+                
+        <div class="footer-bottom">
+            <div class="copyright">
+                &copy; 2025 XyzopediaMarket. All Rights Reserved.
+
+</footer>
+<script>
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        // Check for saved theme preference or use preferred color scheme
+        const savedTheme = localStorage.getItem('theme') || 
+                        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+        // Apply the saved theme
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        } else {
+            body.classList.remove('dark-mode');
+            themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+        }
+
+        // Toggle theme on button click
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            // Update icon and save preference
+            if (body.classList.contains('dark-mode')) {
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // WhatsApp pre-filled message
+        document.querySelectorAll('[href^="https://wa.me/"]').forEach(link => {
+            if (!link.getAttribute('href').includes('?text=')) {
+                link.setAttribute('href', link.getAttribute('href') + '?text=Halo,%20saya%20ingin%20bertanya%20tentang%20layanan%20panel%20Pterodactyl');
+            }
+        });
+    </script>
+</body>
+</html>

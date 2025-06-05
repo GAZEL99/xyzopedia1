@@ -616,17 +616,26 @@
       try {
         // Send text message
         await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            chat_id: CHAT_ID,
-            text: message,
-            parse_mode: 'Markdown'
-          })
-        });
-        
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    chat_id: CHAT_ID,
+    text: message,
+    parse_mode: 'Markdown',
+    reply_markup: {
+      inline_keyboard: [
+        [
+          {
+            text: '✅ Konfirmasi Pesanan',
+            callback_data: 'confirm_order'
+          }
+        ]
+      ]
+    }
+  })
+});
         // Send photo if available
         if (fileInput.files.length > 0) {
           const formData = new FormData();

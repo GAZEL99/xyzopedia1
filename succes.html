@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pembayaran Berhasil</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary: #6C63FF;
+      --secondary: #4D44DB;
+      --accent: #FF6584;
+      --dark: #2D3748;
+      --light: #F7FAFC;
+      --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      --card-bg: white;
+      --success: #4BB543;
+    }
+
+    :root.dark-mode {
+      --primary: #A3A3FF;
+      --secondary: #8888FF;
+      --accent: #FF6584;
+      --dark: #F7FAFC;
+      --light: #2D3748;
+      --bg-gradient: linear-gradient(135deg, #1e1e2f 0%, #2c2c3e 100%);
+      --card-bg: #1f1f2e;
+      --success: #5CB85C;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      color: var(--dark);
+      text-align: center;
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.dark-mode {
+      color: var(--dark);
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      margin-top: 30px;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+
+    body.dark-mode .card {
+      background: #1f1f2e;
+      box-shadow: 0 10px 30px rgba(255, 255, 255, 0.05);
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 5px;
+      color: var(--primary);
+      background: linear-gradient(to right, #6C63FF, #4D44DB);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      color: var(--dark);
+      opacity: 0.7;
+      margin-bottom: 30px;
+      font-size: 16px;
+    }
+
+    .success-icon {
+      font-size: 80px;
+      color: var(--success);
+      margin: 20px 0;
+      animation: bounce 0.5s;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+      40% {transform: translateY(-20px);}
+      60% {transform: translateY(-10px);}
+    }
+
+    .order-details {
+      background: var(--card-bg);
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      text-align: left;
+      border-left: 3px solid var(--success);
+    }
+
+    .order-details h3 {
+      margin-bottom: 10px;
+      color: var(--success);
+    }
+
+    .order-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .order-label {
+      font-weight: 500;
+      color: #666;
+      min-width: 100px;
+    }
+
+    body.dark-mode .order-label {
+      color: #aaa;
+    }
+
+    .order-value {
+      font-weight: 600;
+      text-align: right;
+      flex: 1;
+    }
+
+    .action-btn {
+      background: var(--success);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 15px 25px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 20px;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(75, 181, 67, 0.3);
+    }
+
+    .action-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(75, 181, 67, 0.4);
+    }
+
+    .action-btn i {
+      margin-right: 8px;
+    }
+
+    .instructions {
+      background: #F8F9FA;
+      padding: 15px;
+      border-radius: 12px;
+      text-align: left;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    body.dark-mode .instructions {
+      background: #2e2e3f;
+      color: var(--dark);
+    }
+
+    .instructions ol {
+      padding-left: 20px;
+      margin: 10px 0;
+    }
+
+    .instructions li {
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 15px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div style="text-align: right;">
+        <label style="font-size: 14px;">
+          <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+          Dark Mode
+        </label>
+      </div>
+
+      <div class="success-icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      
+      <h1>Pembayaran Berhasil!</h1>
+      <div class="subtitle">Pembayaran Anda telah berhasil diproses</div>
+
+      <!-- Order Details Section -->
+      <div id="orderDetails" class="order-details">
+        <h3>Detail Pesanan</h3>
+        <div id="orderContent">
+          <!-- Detail pesanan akan ditampilkan di sini -->
+        </div>
+      </div>
+
+      <div class="instructions">
+        <strong>Petunjuk Selanjutnya:</strong>
+        <ol>
+          <li>Pesanan Anda sedang diproses oleh admin</li>
+          <li>Anda akan menerima notifikasi ketika pesanan selesai</li>
+          <li>Jika ada pertanyaan, hubungi admin melalui WhatsApp</li>
+        </ol>
+      </div>
+
+      <button class="action-btn" onclick="window.location.href='https://wa.me/6282295541679'">
+        <i class="fab fa-whatsapp"></i> Hubungi Admin
+      </button>
+    </div>
+  </div>
+
+  <script>
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      document.documentElement.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      localStorage.setItem('darkMode', isDark);
+      document.getElementById("darkModeToggle").checked = isDark;
+    }
+
+    function displayOrderDetails() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const orderDetails = document.getElementById('orderContent');
+      
+      if (urlParams.toString()) {
+          document.getElementById('orderDetails').style.display = 'block';
+          
+          let html = '';
+          
+          // Handle pesanan dari apk.html (aplikasi premium)
+          if (urlParams.has('name') && urlParams.has('price')) {
+              html = `
+                  <div class="order-row">
+                      <span class="order-label">Produk:</span>
+                      <span class="order-value">${decodeURIComponent(urlParams.get('name'))}</span>
+                  </div>
+                  <div class="order-row">
+                      <span class="order-label">Harga:</span>
+                      <span class="order-value">${decodeURIComponent(urlParams.get('price'))}</span>
+                  </div>
+                  <div class="order-row">
+                      <span class="order-label">Durasi:</span>
+                      <span class="order-value">${urlParams.has('duration') ? decodeURIComponent(urlParams.get('duration')) : '-'}</span>
+                  </div>
+              `;
+          }
+          // Handle pesanan dari nokos.html (nomor virtual)
+          else if (urlParams.has('plan') && urlParams.has('price')) {
+              html = `
+                  <div class="order-row">
+                      <span class="order-label">Layanan:</span>
+                      <span class="order-value"> ${decodeURIComponent(urlParams.get('plan'))}</span>
+                  </div>
+                  <div class="order-row">
+                      <span class="order-label">Harga:</span>
+                      <span class="order-value">Rp ${parseInt(urlParams.get('price')).toLocaleString('id-ID')}</span>
+                  </div>
+              `;
+          }
+          // Handle pesanan dari panel.html (panel hosting)
+          else if (urlParams.has('plan') && urlParams.has('cpu') && urlParams.has('price')) {
+              html = `
+                  <div class="order-row">
+                      <span class="order-label">Paket:</span>
+                      <span class="order-value">${decodeURIComponent(urlParams.get('plan'))}</span>
+                  </div>
+                  <div class="order-row">
+                      <span class="order-label">CPU:</span>
+                      <span class="order-value">${decodeURIComponent(urlParams.get('cpu'))}</span>
+                  </div>
+                  <div class="order-row">
+                      <span class="order-label">Harga:</span>
+                      <span class="order-value">Rp ${parseInt(urlParams.get('price')).toLocaleString('id-ID')}/bulan</span>
+                  </div>
+              `;
+          }
+          // Handle pesanan dari suntik.html (sosmed)
+          else if (urlParams.has('platform') && urlParams.has('serviceName')) {
+              html = `
+                  <div class="order-row">
+                      <span class="order-label">Platform:</span>
+                      <span class="order-value">${decodeURIComponent(urlParams.get('platform'))}</span>
+                  </div>
+                  <div class="order-row">
+                      <span class="order-label">Layanan:</span>
+                      <span class="order-value">${decodeURIComponent(urlParams.get('serviceName'))}</span>
+                  </div>
+                  <div class="order-row">
+                      <span class="order-label">Jumlah:</span>
+                      <span class="order-value">${urlParams.get('quantity')}</span>
+                  </div>
+                  <div class="order-row">
+                      <span class="order-label">Target:</span>
+                      <span class="order-value">${decodeURIComponent(urlParams.get('target'))}</span>
+                  </div>
+                  <div class="order-row">
+                      <span class="order-label">Total:</span>
+                      <span class="order-value">Rp ${parseInt(urlParams.get('price')).toLocaleString('id-ID')}</span>
+                  </div>
+              `;
+          }
+          
+          orderDetails.innerHTML = html;
+      } else {
+          document.getElementById('orderDetails').style.display = 'none';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      displayOrderDetails();
+      
+      const darkModeEnabled = localStorage.getItem('darkMode') === 'true';
+      if (darkModeEnabled) {
+        document.body.classList.add('dark-mode');
+        document.documentElement.classList.add('dark-mode');
+      }
+      document.getElementById("darkModeToggle").checked = darkModeEnabled;
+    });
+  </script>
+</body>
+</html>

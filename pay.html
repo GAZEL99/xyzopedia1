@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>payment-methods</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary: #6C63FF;
+      --secondary: #4D44DB;
+      --accent: #FF6584;
+      --dark: #2D3748;
+      --light: #F7FAFC;
+      --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      --card-bg: white;
+    }
+
+    :root.dark-mode {
+      --primary: #A3A3FF;
+      --secondary: #8888FF;
+      --accent: #FF6584;
+      --dark: #F7FAFC;
+      --light: #2D3748;
+      --bg-gradient: linear-gradient(135deg, #1e1e2f 0%, #2c2c3e 100%);
+      --card-bg: #1f1f2e;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      color: var(--dark);
+      text-align: center;
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.dark-mode {
+      color: var(--dark);
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      margin-top: 30px;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+
+    body.dark-mode .card {
+      background: #1f1f2e;
+      box-shadow: 0 10px 30px rgba(255, 255, 255, 0.05);
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 5px;
+      color: var(--primary);
+      background: linear-gradient(to right, #6C63FF, #4D44DB);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      color: var(--dark);
+      opacity: 0.7;
+      margin-bottom: 30px;
+      font-size: 16px;
+    }
+
+    .payment-methods {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .payment-btn {
+      flex: 1;
+      min-width: 120px;
+      padding: 15px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      color: var(--dark);
+    }
+
+    body.dark-mode .payment-btn {
+      background-color: #2a2a3c;
+      color: var(--dark);
+    }
+
+    .payment-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .payment-btn i {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .dana-btn { color: #00AEEF; border: 2px solid #00AEEF; }
+    .gopay-btn { color: #00AA13; border: 2px solid #00AA13; }
+    .qris-btn { color: #6236FF; border: 2px solid #6236FF; }
+    .jago-btn { color: #FF5C00; border: 2px solid #FF5C00; }
+    .whatsapp-btn { 
+      color: #25D366; 
+      border: 2px solid #25D366; 
+      width: 100%;
+      justify-content: center;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 25px 0 15px;
+      color: var(--secondary);
+    }
+
+    .qr-container {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      display: inline-block;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      margin-bottom: 20px;
+    }
+
+    #qrImage {
+      width: 200px;
+      height: 200px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    #qrImage:hover {
+      transform: scale(1.03);
+    }
+
+    .instructions {
+      background: #F8F9FA;
+      padding: 15px;
+      border-radius: 12px;
+      text-align: left;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    body.dark-mode .instructions {
+      background: #2e2e3f;
+      color: var(--dark);
+    }
+
+    .instructions ol {
+      padding-left: 20px;
+      margin: 10px 0;
+    }
+
+    .instructions li {
+      margin-bottom: 8px;
+    }
+
+    #modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.3s;
+    }
+
+    #modal img {
+      max-width: 80%;
+      max-height: 80%;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 30px;
+      right: 30px;
+      color: white;
+      font-size: 30px;
+      cursor: pointer;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .copy-notification {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--primary);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 50px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      display: none;
+      animation: slideDown 0.3s, fadeOut 0.5s 2s forwards;
+    }
+
+    body.dark-mode .copy-notification {
+      background: var(--secondary);
+    }
+
+    @keyframes slideDown {
+      from { top: -50px; opacity: 0; }
+      to { top: 20px; opacity: 1; }
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+    
+    .payment-btn.active {
+      transform: scale(0.98);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+      border: 2px solid var(--primary);
+    }
+
+    .bank-details {
+      background: #F8F9FA;
+      padding: 15px;
+      border-radius: 12px;
+      margin-top: 20px;
+      text-align: left;
+      display: none;
+    }
+    
+    body.dark-mode .bank-details {
+      background: #2e2e3f;
+    }
+    
+    .bank-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    
+    .bank-label {
+      font-weight: 500;
+      color: #666;
+    }
+    
+    body.dark-mode .bank-label {
+      color: #aaa;
+    }
+    
+    .bank-value {
+      font-weight: 600;
+    }
+
+    /* Order Details Styles */
+    .order-details {
+      background: var(--card-bg);
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      text-align: left;
+      border-left: 3px solid var(--primary);
+    }
+
+    .order-details h3 {
+      margin-bottom: 10px;
+      color: var(--primary);
+    }
+
+    .order-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .order-label {
+      font-weight: 500;
+      color: #666;
+    }
+
+    body.dark-mode .order-label {
+      color: #aaa;
+    }
+
+    .order-value {
+      font-weight: 600;
+      text-align: right;
+    }
+
+    /* Countdown Timer Styles */
+    #countdown {
+      margin: 20px 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    #time {
+      font-size: 20px;
+    }
+
+    /* Payment Confirmation Styles */
+    #paymentConfirmation {
+      margin-top: 20px;
+      display: none;
+    }
+
+    #fileName {
+      margin-top: 5px;
+      font-size: 12px;
+      color: var(--dark);
+      opacity: 0.7;
+    }
+
+    /* Payment Status Styles */
+    #paymentStatus {
+      font-size: 14px;
+      color: var(--accent);
+      margin-bottom: 15px;
+      display: none;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 15px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      .payment-btn {
+        min-width: 100px;
+        padding: 12px;
+      }
+    }
+    .order-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 14px;
+      flex-wrap: wrap;
+    }
+
+    .order-label {
+      font-weight: 500;
+      color: #666;
+      min-width: 100px;
+    }
+
+    .order-value {
+      font-weight: 600;
+      text-align: right;
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div style="text-align: right;">
+        <label style="font-size: 14px;">
+          <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+          Dark Mode
+        </label>
+      </div>
+
+      <h1>Payment Xyzopedia</h1>
+      <div class="subtitle">Pilih metode pembayaran yang tersedia</div>
+
+      <!-- Countdown Timer -->
+      <div id="countdown">
+        Selesaikan pembayaran dalam: <span id="time">05:00</span>
+      </div>
+
+      <!-- Payment Status Indicator -->
+      <div id="paymentStatus">
+        <i class="fas fa-circle-notch fa-spin"></i> Status: <span id="statusText">Pending</span>
+      </div>
+
+      <!-- Order Details Section -->
+      <div id="orderDetails" class="order-details">
+        <h3>Detail Pesanan</h3>
+        <div id="orderContent">
+          <!-- Detail pesanan akan ditampilkan di sini -->
+        </div>
+      </div>
+
+      <div class="section-title">Metode Pembayaran</div>
+      <div class="payment-methods">
+        <button class="payment-btn dana-btn" onclick="copyToClipboard('082295541679', 'DANA')">
+          <i class="fas fa-wallet"></i>
+          DANA
+        </button>
+        <button class="payment-btn gopay-btn" onclick="copyToClipboard('082295541679', 'GOPAY')">
+          <i class="fab fa-google-pay"></i>
+          GOPAY
+        </button>
+        <button class="payment-btn qris-btn" onclick="openModal()">
+          <i class="fas fa-qrcode"></i>
+          QRIS
+        </button>
+        <button class="payment-btn jago-btn" onclick="showBankDetails('jago')">
+          <i class="fas fa-university"></i>
+          Bank Jago
+        </button>
+      </div>
+
+      <!-- Bank Jago Details -->
+      <div id="jago-details" class="bank-details">
+        <div class="section-title">Detail Bank Jago</div>
+        <div class="bank-row">
+          <span class="bank-label">Nama Bank:</span>
+          <span class="bank-value">Bank Jago</span>
+        </div>
+        <div class="bank-row">
+          <span class="bank-label">Nomor Rekening:</span>
+          <span class="bank-value">100911681763</span>
+        </div>
+        <div class="bank-row">
+          <span class="bank-label">Nama Pemilik:</span>
+          <span class="bank-value">Maryam</span>
+        </div>
+        <button class="payment-btn" onclick="copyToClipboard('1234567890', 'Bank Jago')" style="margin-top: 10px; width: 100%;">
+          <i class="fas fa-copy"></i>
+          Salin Nomor Rekening
+        </button>
+      </div>
+
+      <div class="section-title">Scan QR Code Pembayaran</div>
+
+      <div class="instructions">
+        <strong>Petunjuk Pembayaran:</strong>
+        <ol>
+          <li>Pilih salah satu metode pembayaran di atas</li>
+          <li>Nomor tujuan akan otomatis disalin</li>
+          <li>Lakukan transfer sesuai nominal</li>
+          <li>Kirim bukti transfer ke admin</li>
+        </ol>
+      </div>
+
+      <!-- Payment Confirmation Section -->
+      <div id="paymentConfirmation">
+        <div class="section-title">Konfirmasi Pembayaran</div>
+        <div style="margin-bottom: 15px;">
+          <input type="file" id="paymentProof" accept="image/*" style="display: none;">
+          <button class="payment-btn" onclick="document.getElementById('paymentProof').click()" style="width: 100%;">
+            <i class="fas fa-upload"></i> Unggah Bukti Pembayaran
+          </button>
+          <div id="fileName" style="margin-top: 5px; font-size: 12px;"></div>
+        </div>
+        <button class="payment-btn whatsapp-btn" onclick="confirmPayment()">
+          <i class="fas fa-paper-plane"></i> Kirim Konfirmasi
+        </button>
+      </div>
+
+  <div id="modal" onclick="closeModal()">
+    <span class="close-btn">&times;</span>
+    <img src="https://files.catbox.moe/8v8ztf.jpg" alt="QRIS Besar" />
+  </div>
+
+  <div id="copyNotification" class="copy-notification"></div>
+
+  <script>
+    // Telegram configuration
+    const BOT_TOKEN = '8018261370:AAHOM7rDNQqvEg3FW00PO91keoG6BYSizIE';
+    const CHAT_ID = '7604853514';
+
+    function copyToClipboard(text, method) {
+      navigator.clipboard.writeText(text)
+        .then(() => showNotification(`Nomor ${method} disalin: ${text}`))
+        .catch(() => showNotification("Gagal menyalin nomor"));
+      
+      // Set active payment method
+      document.querySelectorAll('.payment-btn').forEach(btn => btn.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+    }
+
+    function showNotification(message) {
+      const notification = document.getElementById("copyNotification");
+      notification.textContent = message;
+      notification.style.display = "block";
+
+      setTimeout(() => {
+        notification.style.display = "none";
+      }, 2500);
+    }
+
+    function openModal() {
+      document.getElementById("modal").style.display = "flex";
+      document.body.style.overflow = "hidden";
+      
+      // Set active payment method
+      document.querySelectorAll('.payment-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelector('.qris-btn').classList.add('active');
+      
+      // Hide any bank details that might be showing
+      hideAllBankDetails();
+    }
+
+    function closeModal() {
+      document.getElementById("modal").style.display = "none";
+      document.body.style.overflow = "auto";
+    }
+
+    document.getElementById("modal").addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal();
+      }
+    });
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      document.documentElement.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      localStorage.setItem('darkMode', isDark);
+      document.getElementById("darkModeToggle").checked = isDark;
+    }
+
+    function showBankDetails(bank) {
+      // Hide all bank details first
+      hideAllBankDetails();
+      
+      // Show the selected bank details
+      document.getElementById(`${bank}-details`).style.display = 'block';
+      
+      // Set active payment method
+      document.querySelectorAll('.payment-btn').forEach(btn => btn.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+    }
+    
+    function hideAllBankDetails() {
+      document.querySelectorAll('.bank-details').forEach(el => {
+        el.style.display = 'none';
+      });
+    }
+
+    function sendProof() {
+      const selectedMethod = document.querySelector('.payment-btn.active')?.innerText || 'QRIS';
+      
+      // Get order details
+      const orderDetails = document.getElementById('orderContent');
+      let orderText = '';
+      
+      if (orderDetails && orderDetails.innerHTML.trim() !== '') {
+        const orderRows = orderDetails.querySelectorAll('.order-row');
+        orderText = '\n\nDetail Pesanan:\n';
+        
+        orderRows.forEach(row => {
+          const label = row.querySelector('.order-label').textContent;
+          const value = row.querySelector('.order-value').textContent;
+          orderText += `${label}: ${value}\n`;
+        });
+      }
+      
+      const message = `Halo admin, saya sudah melakukan pembayaran dengan metode:\n${selectedMethod}\n${orderText}\nBukti transfer terlampir.`;
+      
+      const encodedMessage = encodeURIComponent(message);
+      window.open(`https://wa.me/6282295541679?text=${encodedMessage}`, '_blank');
+    }
+
+    // Telegram notification for new order
+    function sendOrderNotification(orderDetails) {
+      const message = `🔔 *Pesanan Baru* 🔔\n\n${orderDetails}`;
+      
+      fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          chat_id: CHAT_ID,
+          text: message,
+          parse_mode: 'Markdown'
+        })
+      }).catch(error => console.error('Error sending to Telegram:', error));
+    }
+
+    // Telegram payment confirmation
+    async function sendPaymentConfirmation() {
+      const fileInput = document.getElementById('paymentProof');
+      const orderDetails = document.getElementById('orderContent').innerText;
+      const message = `✅ *Konfirmasi Pembayaran* ✅\n\n${orderDetails}`;
+      
+      try {
+        // Send text message
+        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            chat_id: CHAT_ID,
+            text: message,
+            parse_mode: 'Markdown'
+          })
+        });
+        
+        // Send photo if available
+        if (fileInput.files.length > 0) {
+          const formData = new FormData();
+          formData.append('chat_id', CHAT_ID);
+          formData.append('photo', fileInput.files[0]);
+          formData.append('caption', 'Bukti Pembayaran');
+          
+          await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+            method: 'POST',
+            body: formData
+          });
+        }
+        
+        showNotification('Konfirmasi pembayaran berhasil dikirim!');
+      } catch (error) {
+        console.error('Error sending confirmation:', error);
+        showNotification('Gagal mengirim konfirmasi');
+      }
+    }
+
+    // Countdown timer
+    function startCountdown() {
+      let minutes = 5;
+      let seconds = 0;
+      const countdownElement = document.getElementById('time');
+      const paymentConfirmation = document.getElementById('paymentConfirmation');
+      
+      // Show payment confirmation section
+      paymentConfirmation.style.display = 'block';
+      
+      const interval = setInterval(() => {
+        if (seconds === 0) {
+          if (minutes === 0) {
+            clearInterval(interval);
+            countdownElement.textContent = "Waktu habis!";
+            countdownElement.style.color = "red";
+            return;
+          }
+          minutes--;
+          seconds = 59;
+        } else {
+          seconds--;
+        }
+        
+        countdownElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      }, 1000);
+    }
+
+    // File upload handler
+    document.getElementById('paymentProof').addEventListener('change', function(e) {
+      const fileName = e.target.files[0]?.name || 'Tidak ada file dipilih';
+      document.getElementById('fileName').textContent = fileName;
+    });
+
+    // Confirm payment function
+    function confirmPayment() {
+      sendPaymentConfirmation();
+      // Show pending status
+      document.getElementById('paymentStatus').style.display = 'block';
+      
+      // Redirect to success page after 3 seconds
+      setTimeout(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        window.location.href = 'success.html?' + urlParams.toString();
+      }, 3000);
+    }
+
+    function displayOrderDetails() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const orderDetails = document.getElementById('orderContent');
+      
+      // Jika ada parameter pesanan
+      if (urlParams.toString()) {
+          document.getElementById('orderDetails').style.display = 'block';
+          
+          let html = '';
+          let orderText = '';
+          
+          // Handle pesanan dari apk.html (aplikasi premium)
+          if (urlParams.has('name') && urlParams.has('price')) {
+              html = `
+                  <div class="order-row">
+                      <span class="order-label">Produk:</span>
+                      <span class="order-value">${decodeURIComponent(urlParams.get('name'))}</span>
+                  </div>
+                  <div class="order-row">
+                      <span class="order-label">Harga:</span>
+                      <span class="order-value">${decodeURIComponent(urlParams.get('price'))}</span>
+                  </div>
+                  <div class="order-row">
+                      <span class="order-label">Durasi:</span>
+                      <span class="order-value">${urlParams.has('duration') ? decodeURIComponent(urlParams.get('duration')) : '-'}</span>
+                  </div>
+              `;
+              
+              orderText = `Produk: ${decodeURIComponent(urlParams.get('name'))}\nHarga: ${decodeURIComponent(urlParams.get('price'))}\nDurasi: ${urlParams.has('duration') ? decodeURIComponent(urlParams.get('duration')) : '-'}`;
+          }
+          // Handle pesanan dari nokos.html (nomor virtual)
+          else if (urlParams.has('plan') && urlParams.has('price')) {
+              html = `
+                  <div class="order-row">
+                      <span class="order-label">Layanan:</span>
+                      <span class="order-value"> ${decodeURIComponent(urlParams.get('plan'))}</span>
+                  </div>
+                  <div class="order-row">
+                      <span class="order-label">Harga:</span>
+                      <span class="order-value">Rp ${parseInt(urlParams.get('price')).toLocaleString('id-ID')}</span>
+                  </div>
+              `;
+              
+              orderText = `Layanan: ${decodeURIComponent(urlParams.get('plan'))}\nHarga: Rp ${parseInt(urlParams.get('price')).toLocaleString('id-ID')}`;
+          }
+          // Handle pesanan dari panel.html (panel hosting)
+          else if (urlParams.has('plan') && urlParams.has('cpu') && urlParams.has('price')) {
+              html = `
+                  <div class="order-row">
+                      <span class="order-label">Paket:</span>
+                      <span class="order-value">${decodeURIComponent(urlParams.get('plan'))}</span>
+                  </div>
+                  <div class="order-row">
+                      <span class="order-label">CPU:</span>
+                      <span class="order-value">${decodeURIComponent(urlParams.get('cpu'))}</span>
+                  </div>
+                  <div class="order-row">
+                      <span class="order-label">Harga:</span>
+                      <span class="order-value">Rp ${parseInt(urlParams.get('price')).toLocaleString('id-ID')}/bulan</span>
+                  </div>
+              `;
+              
+              orderText = `Paket: ${decodeURIComponent(urlParams.get('plan'))}\nCPU: ${decodeURIComponent(urlParams.get('cpu'))}\nHarga: Rp ${parseInt(urlParams.get('price')).toLocaleString('id-ID')}/bulan`;
+          }
+          // Handle pesanan dari suntik.html (sosmed)
+          else if (urlParams.has('platform') && urlParams.has('serviceName')) {
+              html = `
+                  <div class="order-row">
+                      <span class="order-label">Platform:</span>
+                      <span class="order-value">${decodeURIComponent(urlParams.get('platform'))}</span>
+                  </div>
+                  <div class="order-row">
+                      <span class="order-label">Layanan:</span>
+                      <span class="order-value">${decodeURIComponent(urlParams.get('serviceName'))}</span>
+                  </div>
+                  <div class="order-row">
+                      <span class="order-label">Jumlah:</span>
+                      <span class="order-value">${urlParams.get('quantity')}</span>
+                  </div>
+                  <div class="order-row">
+                      <span class="order-label">Target:</span>
+                      <span class="order-value">${decodeURIComponent(urlParams.get('target'))}</span>
+                  </div>
+                  <div class="order-row">
+                      <span class="order-label">Total:</span>
+                      <span class="order-value">Rp ${parseInt(urlParams.get('price')).toLocaleString('id-ID')}</span>
+                  </div>
+              `;
+              
+              orderText = `Platform: ${decodeURIComponent(urlParams.get('platform'))}\nLayanan: ${decodeURIComponent(urlParams.get('serviceName'))}\nJumlah: ${urlParams.get('quantity')}\nTarget: ${decodeURIComponent(urlParams.get('target'))}\nTotal: Rp ${parseInt(urlParams.get('price')).toLocaleString('id-ID')}`;
+          }
+          
+          orderDetails.innerHTML = html;
+          
+          // Send order notification to Telegram
+          if (orderText) {
+            sendOrderNotification(orderText);
+          }
+      } else {
+          document.getElementById('orderDetails').style.display = 'none';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      displayOrderDetails();
+      startCountdown();
+      
+      const darkModeEnabled = localStorage.getItem('darkMode') === 'true';
+      if (darkModeEnabled) {
+        document.body.classList.add('dark-mode');
+        document.documentElement.classList.add('dark-mode');
+      }
+      document.getElementById("darkModeToggle").checked = darkModeEnabled;
+    });
+  </script>
+</body>
+</html>

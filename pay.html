@@ -862,11 +862,7 @@
         showNotification('Konfirmasi pembayaran berhasil dikirim!');
         
         // Redirect after delay
-        setTimeout(() => {
-          const urlParams = new URLSearchParams(window.location.search);
-          window.location.href = 'success.html?' + urlParams.toString();
-        }, 3000);
-
+        showNotification('Konfirmasi pembayaran berhasil dikirim! Silakan tunggu konfirmasi admin.');
       } catch (error) {
         console.error('Payment confirmation error:', error);
         document.getElementById('statusText').textContent = 'Gagal mengirim';

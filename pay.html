@@ -846,35 +846,22 @@
           });
         }
 
-        
-// Cek status setiap 3 detik
-const checkStatusInterval = setInterval(async () => {
-  try {
-    const statusSnap = await get(ref(db, 'orders/' + orderId + '/status'));
-    const status = statusSnap.val();
-    if (status === 'confirmed') {
-      clearInterval(checkStatusInterval);
-      window.location.href = "success.html?" + new URLSearchParams(window.location.search).toString();
-    } else if (status === 'canceled') {
-      clearInterval(checkStatusInterval);
-      showNotification("Pesanan dibatalkan oleh admin");
-      setTimeout(() => location.reload(), 3000);
-    }
-  } catch (e) {
-    console.error("Gagal cek status Firebase:", e);
-  }
-}, 10000); // cek setiap 3 detik
-
+        // Monitor payment status
+        const statusRef = ref(db, 'orders/' + orderId + '/status');
+        onValue(statusRef, (snap) => {
+          const status = snap.val();
+          if (status === 'confirmed') {
+            window.location.href = "success.html?" + new URLSearchParams(window.location.search).toString();
+          } else if (status === 'canceled') {
+            showNotification("Pesanan dibatalkan oleh admin");
+            setTimeout(() => location.reload(), 3000);
+          }
+        });
 
         // Show success notification
         showNotification('Konfirmasi pembayaran berhasil dikirim!');
         
         // Redirect after delay
-        setTimeout(() => {
-          const urlParams = new URLSearchParams(window.location.search);
-          window.location.href = 'success.html?' + urlParams.toString();
-        }, 3000);
-
       } catch (error) {
         console.error('Payment confirmation error:', error);
         document.getElementById('statusText').textContent = 'Gagal mengirim';

@@ -583,7 +583,16 @@
     // Telegram configuration
     const BOT_TOKEN = '8018261370:AAHOM7rDNQqvEg3FW00PO91keoG6BYSizIE';
     const CHAT_ID = '7604853514';
-    const orderId = Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+    function generateShortOrderId(length = 4) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let id = '';
+  for (let i = 0; i < length; i++) {
+    id += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return id;
+}
+
+const orderId = generateShortOrderId();
 
     // Utility functions
     function copyToClipboard(text, method) {
@@ -862,6 +871,8 @@
         showNotification('Konfirmasi pembayaran berhasil dikirim!');
         
         // Redirect after delay
+
+
       } catch (error) {
         console.error('Payment confirmation error:', error);
         document.getElementById('statusText').textContent = 'Gagal mengirim';

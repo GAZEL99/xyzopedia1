@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Suntik Sosmed - Xyzopedia</title>
+  <title>Buat Pesanan - Xyzopedia</title>
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -424,6 +424,45 @@
     .theme-toggle i {
       font-size: 1.2rem;
     }
+
+    /* Loading Indicator */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: var(--primary);
+      animation: spin 1s ease-in-out infinite;
+      margin-left: 10px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .api-loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      margin-bottom: 15px;
+    }
+
+    .api-loading .loading {
+      width: 25px;
+      height: 25px;
+      margin-right: 10px;
+    }
+
+    .api-loading span {
+      font-size: 0.9rem;
+      color: var(--dark);
+    }
+
+    .dark-mode .api-loading span {
+      color: var(--dark-text);
+    }
   </style>
 </head>
 <body>
@@ -434,6 +473,11 @@
       </div>
       
       <div class="order-body">
+        <div id="apiLoading" class="api-loading">
+          <div class="loading"></div>
+          <span>Memuat data layanan...</span>
+        </div>
+        
         <div class="form-group">
           <label for="category" class="form-label">Kategori</label>
           <select id="category" class="form-control"></select>
@@ -491,6 +535,7 @@
   <script>
     const API_ID = '39538';
     const API_KEY = '6ae58258127be8b7e2ee71e332a109600fac1c2fdd34304f828898cb0834e422';
+    const PRICE_MULTIPLIER = 1.5; // Harga dikali 1.5x
 
     let services = [];
     let selectedService = null;
@@ -498,6 +543,7 @@
     // Theme Toggle Functionality
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
+    const apiLoading = document.getElementById('apiLoading');
 
     // Check for saved theme preference or use preferred color scheme
     const savedTheme = localStorage.getItem('theme') || 
@@ -526,6 +572,7 @@
         }
     });
 
+    // Fungsi untuk mengambil data layanan dari API
     async function fetchServices() {
       try {
         const response = await axios.post('https://ordersosmed.id/api-1/service', {
@@ -533,50 +580,64 @@
           api_key: API_KEY
         });
         
-        // Process API data
-        services = response.data.data
-          // Filter active services
-          .filter(service => service.status === 'active')
-          // Sort by price (cheapest first)
-          .sort((a, b) => (a.price - b.price))
-          // Adjust price by multiplying with 1.5
-          .map(service => ({
-            ...service,
-            price: Math.round(service.price * 1.5)
-          }));
-        
-        // Get unique categories
-        const categories = [...new Set(services.map(s => s.category_name))];
-        
-        $('#category').empty().append('<option value="">Pilih kategori</option>');
-        categories.forEach(cat => {
-          $('#category').append(`<option value="${cat}">${cat}</option>`);
-        });
-        
-        // Initialize Select2 after data loaded
-        $('#category').trigger('change');
+        if (response.data && response.data.data) {
+          // Terapkan multiplier harga
+          const processedServices = response.data.data.map(service => {
+            return {
+              ...service,
+              price: Math.round(service.price * PRICE_MULTIPLIER)
+            };
+          });
+          
+          // Urutkan layanan berdasarkan harga (termurah ke termahal)
+          processedServices.sort((a, b) => a.price - b.price);
+          
+          return processedServices;
+        } else {
+          throw new Error('Format data tidak valid');
+        }
       } catch (error) {
-        console.error('Error:', error);
-        $('#category').empty().append('<option value="">Gagal memuat kategori</option>');
+        console.error('Error fetching services:', error);
+        throw error;
       }
     }
 
-    function formatPrice(price) {
-      return (price / 1000).toLocaleString('id-ID', {
-        minimumFractionDigits: 3,
-        maximumFractionDigits: 3
+    // Fungsi untuk mengisi dropdown kategori
+    function populateCategories(services) {
+      const categories = [...new Set(services.map(s => s.category_name))];
+      
+      $('#category').empty().append('<option value="">Pilih kategori</option>');
+      categories.forEach(cat => {
+        $('#category').append(`<option value="${cat}">${cat}</option>`);
+      });
+      
+      // Inisialisasi Select2 untuk kategori
+      $('#category').select2({
+        placeholder: "Pilih kategori",
+        width: '100%',
+        dropdownParent: $('.order-card')
       });
     }
 
-    $('#category').on('change', function() {
-      const category = $(this).val();
+    // Fungsi untuk mengisi dropdown layanan berdasarkan kategori
+    function populateServices(category) {
       const filtered = services.filter(s => s.category_name === category);
-
+      
       $('#service').empty().append('<option value="">Pilih layanan</option>');
       filtered.forEach(s => {
-        $('#service').append(`<option value="${s.id}" data-full='${JSON.stringify(s)}'>
-          ${s.service_name} (Rp ${formatPrice(s.price)}/1000)
-        </option>`);
+        const pricePerK = Math.round(s.price / 1000);
+        $('#service').append(
+          `<option value="${s.id}" data-full='${JSON.stringify(s)}'>
+            ${s.service_name} (Rp ${pricePerK.toLocaleString('id-ID')}/1k)
+          </option>`
+        );
+      });
+      
+      // Inisialisasi Select2 untuk layanan
+      $('#service').select2({
+        placeholder: "Pilih layanan",
+        width: '100%',
+        dropdownParent: $('.order-card')
       });
       
       // Reset fields
@@ -584,27 +645,9 @@
       $('#minmax span').text('Masukkan jumlah pesanan');
       $('#quantity').val('');
       updatePrice();
-    });
+    }
 
-    $('#service').on('change', function() {
-      const full = $(this).find(':selected').data('full');
-      selectedService = full;
-      
-      if (full) {
-        $('#description').val(full.description);
-        $('#minmax span').html(`Min: <strong>${full.min}</strong>, Max: <strong>${full.max}</strong>`);
-        $('#quantity').attr('min', full.min).attr('max', full.max).val(full.min);
-        updatePrice();
-      } else {
-        $('#description').val('');
-        $('#minmax span').text('Masukkan jumlah pesanan');
-        $('#quantity').val('').removeAttr('min').removeAttr('max');
-        updatePrice();
-      }
-    });
-
-    $('#quantity').on('input', updatePrice);
-
+    // Fungsi untuk memperbarui harga
     function updatePrice() {
       if (!selectedService) {
         $('#priceDisplay').text('Biaya: Rp 0');
@@ -615,7 +658,7 @@
       const min = parseInt(selectedService.min) || 0;
       const max = parseInt(selectedService.max) || Infinity;
       
-      // Validate quantity
+      // Validasi jumlah
       if (qty < min) {
         $('#quantity').val(min);
         return updatePrice();
@@ -629,45 +672,78 @@
       $('#priceDisplay').text(`Biaya: Rp ${total.toLocaleString('id-ID')}`);
     }
 
-    $('#submitBtn').on('click', function() {
-      const serviceId = selectedService?.id;
-      const target = $('#target').val();
-      const quantity = $('#quantity').val();
+    // Fungsi untuk inisialisasi
+    async function initialize() {
+      try {
+        services = await fetchServices();
+        populateCategories(services);
+        apiLoading.style.display = 'none';
+        
+        // Event listener untuk perubahan kategori
+        $('#category').on('change', function() {
+          const category = $(this).val();
+          if (category) {
+            populateServices(category);
+          } else {
+            $('#service').empty().append('<option value="">Pilih layanan</option>');
+            $('#service').trigger('change');
+          }
+        });
+        
+        // Event listener untuk perubahan layanan
+        $('#service').on('change', function() {
+          const full = $(this).find(':selected').data('full');
+          selectedService = full;
+          
+          if (full) {
+            $('#description').val(full.description);
+            $('#minmax span').html(`Min: <strong>${full.min}</strong>, Max: <strong>${full.max}</strong>`);
+            $('#quantity').attr('min', full.min).attr('max', full.max).val(full.min);
+            updatePrice();
+          } else {
+            $('#description').val('');
+            $('#minmax span').text('Masukkan jumlah pesanan');
+            $('#quantity').val('').removeAttr('min').removeAttr('max');
+            updatePrice();
+          }
+        });
+        
+        // Event listener untuk input jumlah
+        $('#quantity').on('input', updatePrice);
+        
+        // Event listener untuk tombol submit
+        $('#submitBtn').on('click', function() {
+          const serviceId = selectedService?.id;
+          const target = $('#target').val();
+          const quantity = $('#quantity').val();
 
-      if (!serviceId) return alert('Silakan pilih layanan terlebih dahulu');
-      if (!target) return alert('Silakan masukkan link/target');
-      if (!quantity) return alert('Silakan masukkan jumlah pesanan');
+          if (!serviceId) return alert('Silakan pilih layanan terlebih dahulu');
+          if (!target) return alert('Silakan masukkan link/target');
+          if (!quantity) return alert('Silakan masukkan jumlah pesanan');
 
-      const price = Math.round((selectedService.price / 1000) * parseInt(quantity));
-      
-      const params = new URLSearchParams({
-        service: serviceId,
-        category: selectedService.category_name,
-        platform: selectedService.type,
-        serviceName: selectedService.service_name,
-        price: price,
-        target: target,
-        quantity: quantity
-      });
-      
-      window.location.href = 'pay.html?' + params.toString();
-    });
+          const price = Math.round((selectedService.price / 1000) * parseInt(quantity));
+          
+          const params = new URLSearchParams({
+            service: serviceId,
+            category: selectedService.category_name,
+            platform: selectedService.type,
+            serviceName: selectedService.service_name,
+            price: price,
+            target: target,
+            quantity: quantity
+          });
+          
+          window.location.href = 'pay.html?' + params.toString();
+        });
+        
+      } catch (error) {
+        console.error('Initialization error:', error);
+        apiLoading.innerHTML = '<span style="color: var(--danger);"><i class="fas fa-exclamation-circle"></i> Gagal memuat data layanan. Silakan refresh halaman.</span>';
+      }
+    }
 
-    $(document).ready(function() {
-      $('#category').select2({
-        placeholder: "Pilih kategori",
-        width: '100%',
-        dropdownParent: $('.order-card')
-      });
-      
-      $('#service').select2({
-        placeholder: "Pilih layanan",
-        width: '100%',
-        dropdownParent: $('.order-card')
-      });
-      
-      fetchServices();
-    });
+    // Jalankan inisialisasi saat dokumen siap
+    $(document).ready(initialize);
   </script>
 </body>
-            </html>
+</html>

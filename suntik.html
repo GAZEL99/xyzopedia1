@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Buat Pesanan - Xyzopedia</title>
+  <title>Suntik Sosmed - Xyzopedia</title>
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -533,17 +533,39 @@
           api_key: API_KEY
         });
         
-        services = response.data.data;
+        // Process API data
+        services = response.data.data
+          // Filter active services
+          .filter(service => service.status === 'active')
+          // Sort by price (cheapest first)
+          .sort((a, b) => (a.price - b.price))
+          // Adjust price by multiplying with 1.5
+          .map(service => ({
+            ...service,
+            price: Math.round(service.price * 1.5)
+          }));
+        
+        // Get unique categories
         const categories = [...new Set(services.map(s => s.category_name))];
         
         $('#category').empty().append('<option value="">Pilih kategori</option>');
         categories.forEach(cat => {
           $('#category').append(`<option value="${cat}">${cat}</option>`);
         });
+        
+        // Initialize Select2 after data loaded
+        $('#category').trigger('change');
       } catch (error) {
         console.error('Error:', error);
         $('#category').empty().append('<option value="">Gagal memuat kategori</option>');
       }
+    }
+
+    function formatPrice(price) {
+      return (price / 1000).toLocaleString('id-ID', {
+        minimumFractionDigits: 3,
+        maximumFractionDigits: 3
+      });
     }
 
     $('#category').on('change', function() {
@@ -552,7 +574,9 @@
 
       $('#service').empty().append('<option value="">Pilih layanan</option>');
       filtered.forEach(s => {
-        $('#service').append(`<option value="${s.id}" data-full='${JSON.stringify(s)}'>${s.service_name}</option>`);
+        $('#service').append(`<option value="${s.id}" data-full='${JSON.stringify(s)}'>
+          ${s.service_name} (Rp ${formatPrice(s.price)}/1000)
+        </option>`);
       });
       
       // Reset fields
@@ -646,4 +670,4 @@
     });
   </script>
 </body>
-</html>
+            </html>

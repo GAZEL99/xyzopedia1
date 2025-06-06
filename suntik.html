@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suntik Sosmed - Order Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #5865F2;
+            --primary-dark: #4752C4;
+            --secondary: #f4f6f9;
+            --accent: #ED4245;
+            --light: #ffffff;
+            --dark: #1e1f22;
+            --darker: #121215;
+            --dark-text: #dbdee1;
+            --success: #3BA55D;
+            --danger: #ED4245;
+            --warning: #FAA61A;
+            --reseller: #FF9F43;
+            --card-bg: #ffffff;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --border-radius: 8px;
+        }
+
+        .dark-mode {
+            --primary: #5865F2;
+            --primary-dark: #4752C4;
+            --secondary: #2b2d31;
+            --light: #1e1f22;
+            --dark: #dbdee1;
+            --darker: #121215;
+            --dark-text: #dbdee1;
+            --card-bg: #2b2d31;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--secondary);
+            color: var(--dark);
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+
+        body.dark-mode {
+            background-color: var(--darker);
+            color: var(--dark-text);
+        }
+
+        /* Navbar */
+        .navbar {
+            background: var(--darker);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+
+        .dark-mode .navbar {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(30deg);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+        }
+
+        .dark-mode .card {
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .card:hover {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .form-container {
+            padding: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+
+        /* Improved Select Styles */
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            background-color: var(--card-bg);
+            color: var(--dark);
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 15px;
+            cursor: pointer;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.2);
+        }
+
+        .dark-mode .form-control {
+            border-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Custom Select2 Styling */
+        .select2-container {
+            width: 100% !important;
+            margin-bottom: 50px;
+        }
+
+        .select2-container--default .select2-selection--single {
+            background-color: var(--card-bg);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            height: 100px;
+            padding: 8px 15px;
+            transition: var(--transition);
+        }
+
+        .dark-mode .select2-container--default .select2-selection--single {
+            background-color: var(--card-bg);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: var(--dark);
+            line-height: 1.5;
+            padding-left: 0;
+        }
+
+        .dark-mode .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: var(--dark-text);
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 100px;
+            right: 10px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow b {
+            border-color: var(--dark) transparent transparent transparent;
+            border-width: 6px 6px 0 6px;
+        }
+
+        .dark-mode .select2-container--default .select2-selection--single .select2-selection__arrow b {
+            border-color: var(--dark-text) transparent transparent transparent;
+        }
+
+        .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+            border-color: transparent transparent var(--dark) transparent;
+            border-width: 0 6px 6px 6px;
+        }
+
+        .dark-mode .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+            border-color: transparent transparent var(--dark-text) transparent;
+        }
+
+        .select2-container--default .select2-results__option--highlighted[aria-selected] {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .select2-container--default .select2-results__option[aria-selected=true] {
+            background-color: rgba(88, 101, 242, 0.1);
+            color: var(--primary);
+        }
+
+        .select2-results__option {
+            padding: 10px 15px;
+        }
+
+        .select2-dropdown {
+            background-color: var(--card-bg);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .select2-dropdown {
+            background-color: var(--card-bg);
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .select2-search--dropdown .select2-search__field {
+            background-color: var(--card-bg);
+            color: var(--dark);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            padding: 8px 12px;
+        }
+
+        .dark-mode .select2-search--dropdown .select2-search__field {
+            background-color: var(--card-bg);
+            color: var(--dark-text);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .price-display {
+            display: flex;
+            justify-content: space-between;
+            background: linear-gradient(to right, rgba(88, 101, 242, 0.05), rgba(237, 66, 69, 0.05));
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+            border: 1px dashed var(--primary);
+        }
+
+        .price-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .price-label {
+            font-size: 0.8rem;
+            color: var(--dark);
+            margin-bottom: 5px;
+            font-weight: 400;
+        }
+
+        .dark-mode .price-label {
+            color: var(--dark-text);
+        }
+
+        .price-value {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--primary);
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            text-decoration: none;
+            margin-top: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn:hover {
+            background: linear-gradient(to right, var(--primary-dark), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 7px 14px rgba(88, 101, 242, 0.2);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .service-info {
+            background: linear-gradient(to right, rgba(88, 101, 242, 0.05), rgba(237, 66, 69, 0.05));
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin: 15px 0;
+            border-left: 3px solid var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .service-info p {
+            margin: 5px 0;
+            color: var(--dark);
+        }
+
+        .dark-mode .service-info p {
+            color: var(--dark-text);
+        }
+
+        .total-price {
+            text-align: center;
+            margin: 25px 0;
+            padding: 15px;
+            background: linear-gradient(to right, rgba(88, 101, 242, 0.05), rgba(237, 66, 69, 0.05));
+            border-radius: var(--border-radius);
+        }
+
+        .total-label {
+            font-size: 0.9rem;
+            color: var(--dark);
+            margin-bottom: 5px;
+            font-weight: 400;
+        }
+
+        .dark-mode .total-label {
+            color: var(--dark-text);
+        }
+
+        .total-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .note {
+            font-size: 0.8rem;
+            color: var(--dark);
+            margin-top: 5px;
+            font-style: italic;
+            font-weight: 300;
+        }
+
+        .dark-mode .note {
+            color: var(--dark-text);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+
+        .service-info ul {
+            padding-left: 20px;
+            margin: 5px 0;
+        }
+
+        .service-info li {
+            margin-bottom: 5px;
+            color: var(--dark);
+            font-size: 0.85rem;
+        }
+
+        .dark-mode .service-info li {
+            color: var(--dark-text);
+        }
+
+        .api-loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .api-loading .loading {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+        }
+
+        .api-loading span {
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+
+        .dark-mode .api-loading span {
+            color: var(--dark-text);
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .price-display {
+                flex-direction: column;
+            }
+            
+            .price-item:not(:last-child) {
+                margin-bottom: 15px;
+                padding-bottom: 15px;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            }
+
+            .dark-mode .price-item:not(:last-child) {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+        }
+    
+/* === BRUTAL DARK MODE FIX === */
+.dark-mode .select2-container--default .select2-selection--single {
+    background-color: #2b2d31 !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #dbdee1 !important;
+}
+
+.dark-mode .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #dbdee1 !important;
+    background-color: #2b2d31 !important;
+}
+
+.dark-mode .select2-container--default .select2-selection--single .select2-selection__arrow {
+    background-color: #2b2d31 !important;
+}
+
+.dark-mode .select2-dropdown {
+    background-color: #2b2d31 !important;
+    color: #dbdee1 !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.dark-mode .select2-results__option {
+    color: #dbdee1 !important;
+    background-color: #2b2d31 !important;
+}
+
+
+/* Fix text appearance in select2 for both modes */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    padding-left: 4px !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    color: var(--dark) !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.2 !important;
+    align-items: center;
+}
+
+.dark-mode .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #dbdee1 !important;
+}
+
+</style>
+
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">
+                <i class="fas fa-bolt"></i>
+                <span>SuntikSosmed</span>
+            </div>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <h1>Pilih Layanan</h1>
+                <p>Tingkatkan media sosial Anda dengan mudah</p>
+            </div>
+            
+            <div class="form-container">
+                <div id="apiLoading" class="api-loading" style="display:flex;">
+                    <div class="loading"></div>
+                    <span>Memuat data layanan...</span>
+                </div>
+                
+                <form id="orderForm" style="display: none;">
+                    <div class="form-group">
+                        <label for="platform">Platform Media Sosial *</label>
+                        <select id="platform" class="form-control" required></select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="serviceType">Jenis Layanan *</label>
+                        <select id="serviceType" class="form-control" disabled required>
+                            <option value="">-- Pilih Layanan --</option>
+                        </select>
+                    </div>
+                    
+                    <div class="service-info">
+                        <p id="serviceDescriptionText">Silakan pilih platform dan layanan untuk melihat detail</p>
+                        <p id="deliveryTime">-</p>
+                        <p id="serviceNote" class="note"></p>
+                    </div>
+                    
+                    <div class="price-display">
+                        <div class="price-item">
+                            <div class="price-label">Harga per 1000</div>
+                            <div class="price-value" id="pricePer1000">Rp 0</div>
+                        </div>
+                        <div class="price-item">
+                            <div class="price-label">Minimal Pesanan</div>
+                            <div class="price-value" id="minOrder">100</div>
+                        </div>
+                        <div class="price-item">
+                            <div class="price-label">Kecepatan</div>
+                            <div class="price-value" id="deliverySpeed">-</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="quantity">Jumlah Pesanan *</label>
+                        <input type="number" id="quantity" class="form-control" min="100" required disabled>
+                        <p id="maxOrder" class="note"></p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="target">Target (Username/Link) *</label>
+    <input type="text" id="target" class="form-control" placeholder="Contoh: @username atau https://..." required disabled>
+
+    <label for="whatsapp">Nomor WhatsApp *</label>
+    <input type="tel" id="whatsapp" class="form-control" placeholder="08xxxxxxxxxx" required disabled>
+                        <input type="text" id="target" class="form-control" placeholder="Contoh: @username atau https://..." required disabled>
+                    </div>
+                    
+                    <div class="total-price">
+                        <div class="total-label">Total Pembayaran</div>
+                        <div class="total-value" id="totalPrice">Rp 0</div>
+                    </div>
+                    
+                    <div class="service-info">
+                        <p style="color: var(--danger); font-weight: 600;">
+                            <i class="fas fa-exclamation-triangle"></i> Ketentuan Pesanan:
+                        </p>
+                        <ul>
+                            <li>Tidak ada refund jika ada kesalahan dalam pesanan.</li>
+                            <li>Silahkan membuat pesanan sesuai langkah-langkah diatas.</li>
+                            <li>Jika terjadi kesalahan / mendapatkan pesan gagal yang kurang jelas, silahkan hubungi Admin untuk informasi lebih lanjut.</li>
+                            <li>Pastikan Akun anda tidak berstatus Private ataupun Hide.</li>
+                        </ul>
+                    </div>
+                    
+                    <button type="submit" class="btn" id="submitBtn" disabled>
+                        <span id="btnText">Pesan Sekarang</span>
+                        <span id="btnLoader" class="loading" style="display: none;"></span>
+                    </button>
+                </form>
+                
+                <div id="apiError" class="service-info" style="display: none; color: var(--danger);">
+                    <p><i class="fas fa-exclamation-circle"></i> Gagal memuat data layanan. Silakan refresh halaman atau hubungi admin.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery (wajib untuk Select2) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+
+    <script>
+        let globalServices;
+
+        // Konfigurasi API PanelPedia
+        const ordersosmedConfig = {
+    apiId: '39538',
+    apiKey: '6ae58258127be8b7e2ee71e332a109600fac1c2fdd34304f828898cb0834e422',
+    baseUrl: 'https://ordersosmed.id/api-1/service',
+    priceMultiplier: 1
+};
+
+        // DOM elements
+        const platformSelect = document.getElementById('platform');
+        const serviceTypeSelect = document.getElementById('serviceType');
+        const quantityInput = document.getElementById('quantity');
+        const targetInput = document.getElementById('target');
+        const orderButton = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const btnLoader = document.getElementById('btnLoader');
+        const serviceDescription = document.getElementById('serviceDescriptionText');
+        const deliveryTime = document.getElementById('deliveryTime');
+        const serviceNote = document.getElementById('serviceNote');
+        const pricePer1000 = document.getElementById('pricePer1000');
+        const minOrder = document.getElementById('minOrder');
+        const deliverySpeed = document.getElementById('deliverySpeed');
+        const totalPrice = document.getElementById('totalPrice');
+        const maxOrderNote = document.getElementById('maxOrder');
+        const apiLoading = document.getElementById('apiLoading');
+        const orderForm = document.getElementById('orderForm');
+        const apiError = document.getElementById('apiError');
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        // Check for saved theme preference or use preferred color scheme
+        const savedTheme = localStorage.getItem('theme') || 
+                        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+        // Apply the saved theme
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        } else {
+            body.classList.remove('dark-mode');
+            themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+        }
+
+        // Toggle theme on button click
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            // Update icon and save preference
+            if (body.classList.contains('dark-mode')) {
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                localStorage.setItem('theme', 'light');
+            }
+
+            // Update Select2 styling when theme changes
+            setTimeout(() => {
+                $('#platform').select2();
+                $('#serviceType').select2();
+            }, 100);
+        });
+
+        // Initialize Select2 dropdowns
+        $(document).ready(function() {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (!isMobile) {
+        $('#platform').select2({
+            placeholder: "Pilih platform",
+            width: '100%'
+        });
+        $('#serviceType').select2({
+            placeholder: "Pilih layanan",
+            width: '100%'
+        });
+    } else {
+        if ($('#platform').hasClass('select2-hidden-accessible')) {
+            $('#platform').select2('destroy');
+        }
+        if ($('#serviceType').hasClass('select2-hidden-accessible')) {
+            $('#serviceType').select2('destroy');
+        }
+    }
+
+            $('#platform').select2({
+                placeholder: "Pilih platform",
+                width: '100%',
+                allowClear: false
+            });
+            
+            $('#serviceType').select2({
+                placeholder: "Pilih layanan",
+                width: '100%',
+                allowClear: false
+            });
+        });
+
+        // Fungsi untuk mengambil data dari PanelPedia
+        async function fetchOrdersosmedServices() {
+            try {
+                const response = await fetch(ordersosmedConfig.baseUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ api_id: ordersosmedConfig.apiId, api_key: ordersosmedConfig.apiKey })
+                });
+                if (!response.ok) {
+                    throw new Error('Gagal mengambil data dari PanelPedia');
+                }
+                const data = await response.json();
+                console.log('Respon dari API SMMNusantara:', data);
+                return data.data;
+            } catch (error) {
+                console.error('Error fetching PanelPedia services:', error);
+                return null;
+            }
+        }
+
+        // Transform data dari PanelPedia ke format yang sesuai
+                        const serviceKey = service.name.toLowerCase().replace(/\s+/g, '_');
+                const originalPrice = parseInt(service.price);
+                const adjustedPrice = Math.round(originalPrice * ordersosmedConfig.priceMultiplier);
+
+                transformed[platformKey][serviceKey] = {
+                    name: service.name,
+                    description: service.description || `${service.name} untuk ${service.category}`,
+                    price: adjustedPrice,
+                    min: parseInt(service.min) || 100,
+                    delivery: service.proses || '1-3 hari kerja',
+                    note: service.note || '',
+                    max: service.max || null
+                };
+            });
+
+            return transformed;
+        }
+
+        // Data default jika API gagal
+        const defaultServices = {
+            instagram: {
+                followers: {
+                    name: "Followers Instagram",
+                    description: "Followers Instagram berkualitas tinggi dengan akun aktif dan profil asli",
+                    price: 85000,
+                    min: 100,
+                    delivery: "3-7 hari kerja",
+                    note: "Garansi 30 hari. No drop. Minimal akun harus memiliki 3 postingan.",
+                    max: "10000"
+                },
+                likes: {
+                    name: "Likes Instagram",
+                    description: "Likes postingan Instagram dari akun real dengan engagement tinggi",
+                    price: 55000,
+                    min: 100,
+                    delivery: "1-3 hari kerja",
+                    note: "Kualitas tinggi dengan profil asli. Cocok untuk semua jenis postingan.",
+                    max: "5000"
+                }
+            },
+            tiktok: {
+                followers: {
+                    name: "Followers TikTok",
+                    description: "Followers TikTok berkualitas dengan akun aktif",
+                    price: 45000,
+                    min: 100,
+                    delivery: "3-5 hari kerja",
+                    note: "Akun harus memiliki minimal 1 video. Garansi 30 hari.",
+                    max: "5000"
+                },
+                likes: {
+                    name: "Likes TikTok",
+                    description: "Likes untuk video TikTok dari akun real",
+                    price: 25000,
+                    min: 100,
+                    delivery: "24-48 jam",
+                    note: "Kualitas tinggi. Cocok untuk semua jenis video.",
+                    max: "10000"
+                }
+            }
+        };
+
+        // Fungsi utama untuk inisialisasi
+        async function initializeServices() {
+            try {
+                const panelPediaServices = await fetchOrdersosmedServices();
+                const services = panelPediaServices || defaultServices;
+                globalServices = services;
+                populatePlatformDropdown(services);
+                
+                // Sembunyikan loading dan tampilkan form
+                apiLoading.style.display = 'none';
+                orderForm.style.display = 'block';
+                
+                // Setup event listeners dengan data yang sudah dimuat
+                setupEventListeners(services);
+                
+            } catch (error) {
+                console.error('Error initializing services:', error);
+                apiLoading.style.display = 'none';
+                apiError.style.display = 'block';
+                
+                // Gunakan data default dan tetap tampilkan form
+                globalServices = defaultServices;
+                populatePlatformDropdown(defaultServices);
+                orderForm.style.display = 'block';
+                setupEventListeners(defaultServices);
+            }
+        }
+
+        function populatePlatformDropdown(services) {
+            platformSelect.innerHTML = '<option value="">-- Pilih Platform --</option>';
+
+            const platformNames = {
+                'instagram': 'Instagram',
+                'tiktok': 'TikTok',
+                'youtube': 'YouTube',
+                'twitter': 'Twitter',
+                'facebook': 'Facebook'
+            };
+
+            // Ambil semua platform yang tersedia dari data API
+            const availablePlatforms = Object.keys(services).filter(key => {
+                return Object.keys(services[key]).length > 0; // Hanya platform yang memiliki layanan
+            });
+
+            availablePlatforms.forEach(platformKey => {
+                const option = document.createElement('option');
+                option.value = platformKey;
+                // Gunakan nama yang lebih baik jika ada di mapping, atau format dari key
+                option.textContent = platformNames[platformKey] || 
+                                   platformKey.replace(/_/g, ' ')
+                                             .replace(/\b\w/g, c => c.toUpperCase());
+                platformSelect.appendChild(option);
+            });
+
+            // Reinitialize Select2
+            $('#platform').select2({
+                placeholder: "Pilih platform",
+                width: '100%'
+            });
+        }
+
+        // Setup event listeners dengan data services
+        function setupEventListeners(services) {
+            platformSelect.addEventListener('change', () => {
+                updateServiceTypes(services);
+            });
+            
+            serviceTypeSelect.addEventListener('change', () => {
+                updateServiceDetails(services);
+            });
+            
+            quantityInput.addEventListener('input', calculateTotal);
+            
+            // Form submission
+            orderForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitOrder(services);
+            });
+        }
+
+        // Update service types based on selected platform
+        function updateServiceTypes(services) {
+            const platform = platformSelect.value;
+
+            serviceTypeSelect.innerHTML = '<option value="">-- Pilih Layanan --</option>';
+            serviceTypeSelect.disabled = false;
+
+    if (!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        if ($('#serviceType').hasClass("select2-hidden-accessible")) {
+            $('#serviceType').select2('destroy');
+        }
+        setTimeout(() => {
+            $('#serviceType').select2({
+                placeholder: "Pilih layanan...",
+                width: '100%',
+                language: {
+                    noResults: function() {
+                        return "Tidak ada hasil ditemukan";
+                    },
+                    searching: function() {
+                        return "Mencari...";
+                    }
+                }
+            });
+        }, 50);
+    } else {
+        if ($('#serviceType').hasClass("select2-hidden-accessible")) {
+            $('#serviceType').select2('destroy');
+        }
+    }
+    
+
+            if (platform && services[platform]) {
+                // Urutkan layanan berdasarkan harga
+                const sortedServices = Object.entries(services[platform])
+                    .sort(([, a], [, b]) => a.price - b.price);
+
+                sortedServices.forEach(([serviceKey, serviceData]) => {
+                    const option = document.createElement('option');
+                    option.value = serviceKey;
+                    option.textContent = `${serviceData.name} (Rp ${serviceData.price.toLocaleString('id-ID')}/1k)`;
+                    serviceTypeSelect.appendChild(option);
+                });
+
+                serviceTypeSelect.disabled = false;
+
+                // Hancurkan Select2 lama jika ada
+                if ($('#serviceType').hasClass("select2-hidden-accessible")) {
+                    $('#serviceType').select2('destroy');
+                }
+
+                // Inisialisasi ulang Select2
+                setTimeout(() => {
+                    $('#serviceType').select2({
+                        placeholder: "Pilih layanan...",
+                        width: '100%',
+                        language: {
+                            noResults: function() {
+                                return "Tidak ada hasil ditemukan";
+                            },
+                            searching: function() {
+                                return "Mencari...";
+                            }
+                        }
+                    });
+                }, 50);
+            }
+
+            resetForm();
+        }
+
+        // Update service details when service type is selected
+        function updateServiceDetails(services) {
+            const platform = platformSelect.value;
+            const service = serviceTypeSelect.value;
+            
+            if (platform && service && services[platform] && services[platform][service]) {
+                const serviceData = services[platform][service];
+                
+                // Update service info
+                serviceDescription.textContent = serviceData.description;
+                deliveryTime.textContent = `Waktu penyelesaian: ${serviceData.delivery}`;
+                serviceNote.textContent = serviceData.note || '';
+                deliverySpeed.textContent = serviceData.delivery;
+                
+                // Update price info
+                pricePer1000.textContent = `Rp ${serviceData.price.toLocaleString('id-ID')}`;
+                minOrder.textContent = serviceData.min;
+                
+                // Set max order note if available
+                if (serviceData.max) {
+                    maxOrderNote.textContent = `Max order: ${serviceData.max} per hari`;
+                    quantityInput.max = serviceData.max;
+                } else {
+                    maxOrderNote.textContent = '';
+                    quantityInput.removeAttribute('max');
+                }
+                
+                // Enable quantity input and set min value
+                quantityInput.disabled = false;
+                quantityInput.min = serviceData.min;
+                quantityInput.value = serviceData.min;
+                
+                // Enable target input
+                targetInput.disabled = false;
+                targetInput.value = '';
+                
+                // Enable order button
+                orderButton.disabled = false;
+                
+                // Calculate initial total
+                calculateTotal();
+            } else {
+                resetForm();
+            }
+        }
+
+        // Calculate total price based on quantity
+        function calculateTotal() {
+            const platform = platformSelect.value;
+            const service = serviceTypeSelect.value;
+            const quantity = parseInt(quantityInput.value) || 0;
+
+            if (platform && service && globalServices && globalServices[platform] && globalServices[platform][service] && quantity > 0) {
+                const serviceData = globalServices[platform][service];
+                const calculatedPrice = Math.round((quantity * serviceData.price) / 1000);
+                totalPrice.textContent = `Rp ${calculatedPrice.toLocaleString('id-ID')}`;
+            } else {
+                totalPrice.textContent = 'Rp 0';
+            }
+        }
+
+        // Reset form fields
+        function resetForm() {
+            serviceDescription.textContent = 'Silakan pilih platform dan layanan untuk melihat detail';
+            deliveryTime.textContent = '-';
+            serviceNote.textContent = '';
+            pricePer1000.textContent = 'Rp 0';
+            minOrder.textContent = '100';
+            deliverySpeed.textContent = '-';
+            quantityInput.value = '';
+            quantityInput.disabled = true;
+            targetInput.value = '';
+            targetInput.disabled = true;
+            orderButton.disabled = true;
+            totalPrice.textContent = 'Rp 0';
+            maxOrderNote.textContent = '';
+        }
+
+        // Form submission handler
+        function submitOrder(services) {
+            // Basic validation
+            if (!platformSelect.value || !serviceTypeSelect.value || !quantityInput.value || !targetInput.value) {
+                alert('Harap lengkapi semua field yang wajib diisi!');
+                return;
+            }
+            
+            const platform = platformSelect.value;
+            const service = serviceTypeSelect.value;
+            const quantity = parseInt(quantityInput.value);
+            const serviceData = services[platform][service];
+            
+            // Validate quantity
+            if (quantity < serviceData.min) {
+                alert(`Jumlah pesanan minimal adalah ${serviceData.min}`);
+                return;
+            }
+            
+            if (serviceData.max && quantity > parseInt(serviceData.max)) {
+                alert(`Jumlah pesanan maksimal adalah ${serviceData.max} per hari`);
+                return;
+            }
+            
+            // Validate target format
+            const target = targetInput.value.trim();
+            if (!target) {
+                alert('Harap masukkan target (username/link)');
+                return;
+            }
+            
+            const whatsapp = document.getElementById('whatsapp').value;
+    const orderId = `ORD${Date.now()}${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+
+    // Show loading state
+            btnText.textContent = 'Memproses...';
+            btnLoader.style.display = 'inline-block';
+            orderButton.disabled = true;
+            
+            // Calculate price
+            const price = Math.round((quantity * serviceData.price) / 1000);
+            
+            Swal.fire({
+        icon: 'success',
+        title: 'Pesanan Berhasil!',
+        html: `<b>Order ID:</b> ${orderId}<br><b>Jumlah:</b> ${quantity}<br><b>Harga:</b> Rp ${price.toLocaleString('id-ID')}`,
+        confirmButtonText: 'Lanjutkan Pembayaran'
+    }).then(() => {
+            setTimeout(() => {
+                // Redirect to payment page with data
+                const queryParams = new URLSearchParams();
+                queryParams.append('platform', platform);
+                queryParams.append('service', service);
+                queryParams.append('quantity', quantity);
+                queryParams.append('target', target);
+                queryParams.append('price', price);
+                queryParams.append('serviceName', serviceData.name);
+                queryParams.append('serviceDescription', serviceData.description);
+    queryParams.append('whatsapp', whatsapp);
+    queryParams.append('order_id', orderId);
+                queryParams.append('deliveryTime', serviceData.delivery);
+                window.location.href = `pay.html?${queryParams.toString()}`;
+            }, 1000);
+        }
+
+        // Panggil fungsi inisialisasi saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', initializeServices);
+    </script>
+</body>
+</html>

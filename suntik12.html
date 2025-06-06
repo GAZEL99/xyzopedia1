@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buat Pesanan - Xyzopedia</title>
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #5865F2;
+      --primary-dark: #4752C4;
+      --secondary: #f4f6f9;
+      --light: #ffffff;
+      --dark: #1e1f22;
+      --darker: #121215;
+      --dark-text: #dbdee1;
+      --success: #3BA55D;
+      --danger: #ED4245;
+      --warning: #FAA61A;
+      --reseller: #FF9F43;
+      --card-bg: #ffffff;
+      --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .dark-mode {
+      --primary: #5865F2;
+      --primary-dark: #4752C4;
+      --secondary: #2b2d31;
+      --light: #1e1f22;
+      --dark: #dbdee1;
+      --darker: #121215;
+      --dark-text: #dbdee1;
+      --card-bg: #2b2d31;
+      --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    body {
+      background-color: var(--secondary);
+      color: var(--dark);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      transition: var(--transition);
+    }
+
+    body.dark-mode {
+      background-color: var(--darker);
+      color: var(--dark-text);
+    }
+    
+    .order-container {
+      max-width: 520px;
+      width: 100%;
+    }
+    
+    .order-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .dark-mode .order-card {
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .order-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+    }
+    
+    .order-header {
+      padding: 1.75rem;
+      text-align: center;
+      position: relative;
+    }
+    
+    .order-header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--dark);
+      position: relative;
+      display: inline-block;
+    }
+
+    .dark-mode .order-header h1 {
+      color: var(--dark-text);
+    }
+    
+    .order-header h1::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 3px;
+    }
+    
+    .order-body {
+      padding: 0 1.75rem 1.75rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+      color: var(--dark);
+      font-size: 0.9375rem;
+    }
+
+    .dark-mode .form-label {
+      color: var(--dark-text);
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 0.875rem 1.25rem;
+      background: var(--secondary);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.9375rem;
+      color: var(--dark);
+      transition: var(--transition);
+    }
+
+    .dark-mode .form-control {
+      background: var(--light);
+      border-color: rgba(255, 255, 255, 0.1);
+      color: var(--dark-text);
+    }
+    
+    .form-control::placeholder {
+      color: #666;
+    }
+
+    .dark-mode .form-control::placeholder {
+      color: #aaa;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.3);
+    }
+    
+    textarea.form-control {
+      min-height: 120px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+    
+    .form-note {
+      font-size: 0.8125rem;
+      color: #666;
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dark-mode .form-note {
+      color: #aaa;
+    }
+    
+    .form-note i {
+      width: 14px;
+      text-align: center;
+      color: var(--primary);
+    }
+    
+    .price-display {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      padding: 1.25rem;
+      border-radius: 8px;
+      margin: 2rem 0;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.375rem;
+      color: white;
+      box-shadow: 0 5px 15px rgba(88, 101, 242, 0.3);
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    
+    .price-display::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 100%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+      transform: rotate(30deg);
+    }
+    
+    .btn {
+      width: 100%;
+      padding: 1rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(88, 101, 242, 0.2);
+    }
+    
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(88, 101, 242, 0.3);
+    }
+    
+    .btn:active {
+      transform: translateY(0);
+    }
+    
+    /* Select2 Customization */
+    .select2-container .select2-selection--single {
+      height: 48px;
+      background: var(--secondary);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      transition: var(--transition);
+    }
+
+    .dark-mode .select2-container .select2-selection--single {
+      background: var(--light);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+      line-height: 48px;
+      padding-left: 1.25rem;
+      color: var(--dark);
+    }
+
+    .dark-mode .select2-container--default .select2-selection--single .select2-selection__rendered {
+      color: var(--dark-text);
+    }
+    
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+      height: 48px;
+      right: 10px;
+    }
+    
+    .select2-container--default .select2-selection--single .select2-selection__arrow b {
+      border-color: #666 transparent transparent transparent;
+    }
+
+    .dark-mode .select2-container--default .select2-selection--single .select2-selection__arrow b {
+      border-color: #aaa transparent transparent transparent;
+    }
+    
+    .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+      border-color: transparent transparent #666 transparent;
+    }
+
+    .dark-mode .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+      border-color: transparent transparent #aaa transparent;
+    }
+    
+    .select2-dropdown {
+      background: var(--card-bg);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      box-shadow: var(--card-shadow);
+    }
+
+    .dark-mode .select2-dropdown {
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .select2-results__option {
+      padding: 10px 1.25rem;
+      color: var(--dark);
+      transition: var(--transition);
+    }
+
+    .dark-mode .select2-results__option {
+      color: var(--dark-text);
+    }
+    
+    .select2-results__option--highlighted {
+      background-color: var(--primary) !important;
+      color: white !important;
+    }
+    
+    .select2-results__option[aria-selected=true] {
+      background-color: rgba(88, 101, 242, 0.1);
+    }
+
+    .dark-mode .select2-results__option[aria-selected=true] {
+      background-color: rgba(88, 101, 242, 0.2);
+    }
+    
+    .select2-search--dropdown .select2-search__field {
+      background: var(--secondary);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      color: var(--dark);
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: var(--transition);
+    }
+
+    .dark-mode .select2-search--dropdown .select2-search__field {
+      background: var(--light);
+      border-color: rgba(255, 255, 255, 0.1);
+      color: var(--dark-text);
+    }
+    
+    /* Animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .order-card {
+      animation: fadeIn 0.4s ease-out forwards;
+    }
+    
+    .form-group {
+      opacity: 0;
+      animation: fadeIn 0.3s ease-out forwards;
+    }
+    
+    .form-group:nth-child(1) { animation-delay: 0.1s; }
+    .form-group:nth-child(2) { animation-delay: 0.2s; }
+    .form-group:nth-child(3) { animation-delay: 0.3s; }
+    .form-group:nth-child(4) { animation-delay: 0.4s; }
+    .form-group:nth-child(5) { animation-delay: 0.5s; }
+    .price-display { animation: fadeIn 0.4s ease-out 0.6s forwards; }
+    #submitBtn { animation: fadeIn 0.4s ease-out 0.7s forwards; }
+    
+    /* Responsive */
+    @media (max-width: 576px) {
+      body {
+        padding: 1rem;
+      }
+      
+      .order-header {
+        padding: 1.5rem 1rem;
+      }
+      
+      .order-body {
+        padding: 0 1rem 1.5rem;
+      }
+      
+      .order-header h1 {
+        font-size: 1.375rem;
+      }
+      
+      .price-display {
+        font-size: 1.25rem;
+        padding: 1rem;
+        margin: 1.5rem 0;
+      }
+    }
+
+    /* Theme Toggle */
+    .theme-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--primary);
+      border: none;
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 4px 12px rgba(88, 101, 242, 0.3);
+      z-index: 100;
+    }
+
+    .theme-toggle:hover {
+      background: var(--primary-dark);
+      transform: translateY(-3px) rotate(30deg);
+      box-shadow: 0 8px 20px rgba(88, 101, 242, 0.4);
+    }
+
+    .theme-toggle i {
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="order-container">
+    <div class="order-card">
+      <div class="order-header">
+        <h1>Buat Pesanan Baru</h1>
+      </div>
+      
+      <div class="order-body">
+        <div class="form-group">
+          <label for="category" class="form-label">Kategori</label>
+          <select id="category" class="form-control"></select>
+        </div>
+        
+        <div class="form-group">
+          <label for="service" class="form-label">Layanan</label>
+          <select id="service" class="form-control"></select>
+        </div>
+        
+        <div class="form-group">
+          <label for="description" class="form-label">Deskripsi Layanan</label>
+          <textarea id="description" class="form-control" readonly></textarea>
+          <div class="form-note">
+            <i class="fas fa-info-circle"></i>
+            Deskripsi layanan yang dipilih
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="target" class="form-label">Link / Target</label>
+          <input type="text" id="target" class="form-control" placeholder="Contoh: @username atau link">
+          <div class="form-note">
+            <i class="fas fa-arrow-right"></i>
+            Masukkan username atau link target Anda
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="quantity" class="form-label">Jumlah</label>
+          <input type="number" id="quantity" class="form-control" min="0">
+          <div id="minmax" class="form-note">
+            <i class="fas fa-calculator"></i>
+            <span>Masukkan jumlah pesanan</span>
+          </div>
+        </div>
+        
+        <div id="priceDisplay" class="price-display">Biaya: Rp 0</div>
+        
+        <button id="submitBtn" class="btn">
+          <i class="fas fa-paper-plane"></i>
+          Pesan Sekarang
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <button class="theme-toggle" id="themeToggle">
+    <i class="fas fa-moon"></i>
+  </button>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script>
+    const API_ID = '39538';
+    const API_KEY = '6ae58258127be8b7e2ee71e332a109600fac1c2fdd34304f828898cb0834e422';
+
+    let services = [];
+    let selectedService = null;
+
+    // Theme Toggle Functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+
+    // Check for saved theme preference or use preferred color scheme
+    const savedTheme = localStorage.getItem('theme') || 
+                    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+    // Apply the saved theme
+    if (savedTheme === 'dark') {
+        body.classList.add('dark-mode');
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+    } else {
+        body.classList.remove('dark-mode');
+        themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+    }
+
+    // Toggle theme on button click
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        
+        // Update icon and save preference
+        if (body.classList.contains('dark-mode')) {
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            localStorage.setItem('theme', 'dark');
+        } else {
+            themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            localStorage.setItem('theme', 'light');
+        }
+    });
+
+    async function fetchServices() {
+      try {
+        const response = await axios.post('https://ordersosmed.id/api-1/service', {
+          api_id: API_ID,
+          api_key: API_KEY
+        });
+        
+        services = response.data.data;
+        const categories = [...new Set(services.map(s => s.category_name))];
+        
+        $('#category').empty().append('<option value="">Pilih kategori</option>');
+        categories.forEach(cat => {
+          $('#category').append(`<option value="${cat}">${cat}</option>`);
+        });
+      } catch (error) {
+        console.error('Error:', error);
+        $('#category').empty().append('<option value="">Gagal memuat kategori</option>');
+      }
+    }
+
+    $('#category').on('change', function() {
+      const category = $(this).val();
+      const filtered = services.filter(s => s.category_name === category);
+
+      $('#service').empty().append('<option value="">Pilih layanan</option>');
+      filtered.forEach(s => {
+        $('#service').append(`<option value="${s.id}" data-full='${JSON.stringify(s)}'>${s.service_name}</option>`);
+      });
+      
+      // Reset fields
+      $('#description').val('');
+      $('#minmax span').text('Masukkan jumlah pesanan');
+      $('#quantity').val('');
+      updatePrice();
+    });
+
+    $('#service').on('change', function() {
+      const full = $(this).find(':selected').data('full');
+      selectedService = full;
+      
+      if (full) {
+        $('#description').val(full.description);
+        $('#minmax span').html(`Min: <strong>${full.min}</strong>, Max: <strong>${full.max}</strong>`);
+        $('#quantity').attr('min', full.min).attr('max', full.max).val(full.min);
+        updatePrice();
+      } else {
+        $('#description').val('');
+        $('#minmax span').text('Masukkan jumlah pesanan');
+        $('#quantity').val('').removeAttr('min').removeAttr('max');
+        updatePrice();
+      }
+    });
+
+    $('#quantity').on('input', updatePrice);
+
+    function updatePrice() {
+      if (!selectedService) {
+        $('#priceDisplay').text('Biaya: Rp 0');
+        return;
+      }
+      
+      const qty = parseInt($('#quantity').val()) || 0;
+      const min = parseInt(selectedService.min) || 0;
+      const max = parseInt(selectedService.max) || Infinity;
+      
+      // Validate quantity
+      if (qty < min) {
+        $('#quantity').val(min);
+        return updatePrice();
+      }
+      if (qty > max) {
+        $('#quantity').val(max);
+        return updatePrice();
+      }
+      
+      const total = Math.round((selectedService.price / 1000) * qty);
+      $('#priceDisplay').text(`Biaya: Rp ${total.toLocaleString('id-ID')}`);
+    }
+
+    $('#submitBtn').on('click', function() {
+      const serviceId = selectedService?.id;
+      const target = $('#target').val();
+      const quantity = $('#quantity').val();
+
+      if (!serviceId) return alert('Silakan pilih layanan terlebih dahulu');
+      if (!target) return alert('Silakan masukkan link/target');
+      if (!quantity) return alert('Silakan masukkan jumlah pesanan');
+
+      const price = Math.round((selectedService.price / 1000) * parseInt(quantity));
+      
+      const params = new URLSearchParams({
+        service: serviceId,
+        category: selectedService.category_name,
+        platform: selectedService.type,
+        serviceName: selectedService.service_name,
+        price: price,
+        target: target,
+        quantity: quantity
+      });
+      
+      window.location.href = 'pay.html?' + params.toString();
+    });
+
+    $(document).ready(function() {
+      $('#category').select2({
+        placeholder: "Pilih kategori",
+        width: '100%',
+        dropdownParent: $('.order-card')
+      });
+      
+      $('#service').select2({
+        placeholder: "Pilih layanan",
+        width: '100%',
+        dropdownParent: $('.order-card')
+      });
+      
+      fetchServices();
+    });
+  </script>
+</body>
+</html>

@@ -672,7 +672,7 @@
     // Fungsi untuk mengambil data layanan dari API dengan retry mechanism
     async function fetchServicesWithRetry(retries = 3, delay = 1000) {
       try {
-        const response = await axios.post('https://ordersosmed.id/api-1/service', {
+        const response = await axios.post('https://sosmed-api-proxy.vercel.app/api/service', {
           api_id: API_ID,
           api_key: API_KEY
         }, {

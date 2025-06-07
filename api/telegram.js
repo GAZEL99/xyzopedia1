@@ -15,7 +15,6 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end('Method Not Allowed');
 
   const body = req.body;
-
   if (body.callback_query) {
     const { id, data } = body.callback_query;
     const orderId = data.replace(/^(confirm_|cancel_)/, '');

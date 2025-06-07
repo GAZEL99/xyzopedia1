@@ -1,975 +1,735 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>payment-methods</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buat Pesanan - Xyzopedia</title>
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #6C63FF;
-      --secondary: #4D44DB;
-      --accent: #FF6584;
-      --dark: #2D3748;
-      --light: #F7FAFC;
-      --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      --card-bg: white;
+      --primary: #5865F2;
+      --primary-dark: #4752C4;
+      --secondary: #f4f6f9;
+      --light: #ffffff;
+      --dark: #1e1f22;
+      --darker: #121215;
+      --dark-text: #dbdee1;
+      --success: #3BA55D;
+      --danger: #ED4245;
+      --warning: #FAA61A;
+      --reseller: #FF9F43;
+      --card-bg: #ffffff;
+      --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    :root.dark-mode {
-      --primary: #A3A3FF;
-      --secondary: #8888FF;
-      --accent: #FF6584;
-      --dark: #F7FAFC;
-      --light: #2D3748;
-      --bg-gradient: linear-gradient(135deg, #1e1e2f 0%, #2c2c3e 100%);
-      --card-bg: #1f1f2e;
+    .dark-mode {
+      --primary: #5865F2;
+      --primary-dark: #4752C4;
+      --secondary: #2b2d31;
+      --light: #1e1f22;
+      --dark: #dbdee1;
+      --darker: #121215;
+      --dark-text: #dbdee1;
+      --card-bg: #2b2d31;
+      --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     }
-
-    body {
+    
+    * {
+      box-sizing: border-box;
       margin: 0;
+      padding: 0;
       font-family: 'Poppins', sans-serif;
+    }
+    
+    body {
+      background-color: var(--secondary);
       color: var(--dark);
-      text-align: center;
-      background: var(--bg-gradient);
+      line-height: 1.6;
       min-height: 100vh;
-      transition: background 0.3s, color 0.3s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      transition: var(--transition);
     }
 
     body.dark-mode {
-      color: var(--dark);
+      background-color: var(--darker);
+      color: var(--dark-text);
     }
-
-    .container {
-      max-width: 500px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    .card {
-      background: white;
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      margin-top: 30px;
-      transition: background 0.3s, box-shadow 0.3s;
-    }
-
-    body.dark-mode .card {
-      background: #1f1f2e;
-      box-shadow: 0 10px 30px rgba(255, 255, 255, 0.05);
-    }
-
-    h1 {
-      font-size: 32px;
-      font-weight: 700;
-      margin-bottom: 5px;
-      color: var(--primary);
-      background: linear-gradient(to right, #6C63FF, #4D44DB);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .subtitle {
-      color: var(--dark);
-      opacity: 0.7;
-      margin-bottom: 30px;
-      font-size: 16px;
-    }
-
-    .payment-methods {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
-      margin-bottom: 30px;
-    }
-
-    .payment-btn {
-      flex: 1;
-      min-width: 120px;
-      padding: 15px;
-      border: none;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background-color: white;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      color: var(--dark);
-    }
-
-    body.dark-mode .payment-btn {
-      background-color: #2a2a3c;
-      color: var(--dark);
-    }
-
-    .payment-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-    }
-
-    .payment-btn i {
-      font-size: 24px;
-      margin-bottom: 8px;
-    }
-
-    .dana-btn { color: #00AEEF; border: 2px solid #00AEEF; }
-    .gopay-btn { color: #00AA13; border: 2px solid #00AA13; }
-    .qris-btn { color: #6236FF; border: 2px solid #6236FF; }
-    .jago-btn { color: #FF5C00; border: 2px solid #FF5C00; }
-    .whatsapp-btn { 
-      color: #25D366; 
-      border: 2px solid #25D366; 
+    
+    .order-container {
+      max-width: 520px;
       width: 100%;
-      justify-content: center;
     }
-
-    .section-title {
-      font-size: 18px;
-      font-weight: 600;
-      margin: 25px 0 15px;
-      color: var(--secondary);
-    }
-
-    .qr-container {
-      background: white;
-      padding: 20px;
-      border-radius: 15px;
-      display: inline-block;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      margin-bottom: 20px;
-    }
-
-    #qrImage {
-      width: 200px;
-      height: 200px;
-      cursor: pointer;
-      transition: transform 0.3s ease;
-    }
-
-    #qrImage:hover {
-      transform: scale(1.03);
-    }
-
-    .instructions {
-      background: #F8F9FA;
-      padding: 15px;
+    
+    .order-card {
+      background: var(--card-bg);
       border-radius: 12px;
-      text-align: left;
-      margin-top: 20px;
-      font-size: 14px;
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      position: relative;
+      transition: var(--transition);
     }
 
-    body.dark-mode .instructions {
-      background: #2e2e3f;
-      color: var(--dark);
+    .dark-mode .order-card {
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
-
-    .instructions ol {
-      padding-left: 20px;
-      margin: 10px 0;
-    }
-
-    .instructions li {
-      margin-bottom: 8px;
-    }
-
-    #modal {
-      display: none;
-      position: fixed;
-      z-index: 999;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.9);
-      justify-content: center;
-      align-items: center;
-      animation: fadeIn 0.3s;
-    }
-
-    #modal img {
-      max-width: 80%;
-      max-height: 80%;
-      border-radius: 10px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    }
-
-    .close-btn {
+    
+    .order-card::before {
+      content: '';
       position: absolute;
-      top: 30px;
-      right: 30px;
-      color: white;
-      font-size: 30px;
-      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+    }
+    
+    .order-header {
+      padding: 1.75rem;
+      text-align: center;
+      position: relative;
+    }
+    
+    .order-header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--dark);
+      position: relative;
+      display: inline-block;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    .dark-mode .order-header h1 {
+      color: var(--dark-text);
     }
-
-    .copy-notification {
-      position: fixed;
-      top: 20px;
+    
+    .order-header h1::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
       left: 50%;
       transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
       background: var(--primary);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 50px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      z-index: 1000;
-      display: none;
-      animation: slideDown 0.3s, fadeOut 0.5s 2s forwards;
+      border-radius: 3px;
+    }
+    
+    .order-body {
+      padding: 0 1.75rem 1.75rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+      color: var(--dark);
+      font-size: 0.9375rem;
     }
 
-    body.dark-mode .copy-notification {
+    .dark-mode .form-label {
+      color: var(--dark-text);
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 0.875rem 1.25rem;
       background: var(--secondary);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.9375rem;
+      color: var(--dark);
+      transition: var(--transition);
     }
 
-    @keyframes slideDown {
-      from { top: -50px; opacity: 0; }
-      to { top: 20px; opacity: 1; }
-    }
-
-    @keyframes fadeOut {
-      from { opacity: 1; }
-      to { opacity: 0; }
+    .dark-mode .form-control {
+      background: var(--light);
+      border-color: rgba(255, 255, 255, 0.1);
+      color: var(--dark-text);
     }
     
-    .payment-btn.active {
-      transform: scale(0.98);
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-      border: 2px solid var(--primary);
-    }
-
-    .bank-details {
-      background: #F8F9FA;
-      padding: 15px;
-      border-radius: 12px;
-      margin-top: 20px;
-      text-align: left;
-      display: none;
-    }
-    
-    body.dark-mode .bank-details {
-      background: #2e2e3f;
-    }
-    
-    .bank-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 8px;
-    }
-    
-    .bank-label {
-      font-weight: 500;
+    .form-control::placeholder {
       color: #666;
     }
-    
-    body.dark-mode .bank-label {
+
+    .dark-mode .form-control::placeholder {
       color: #aaa;
     }
     
-    .bank-value {
-      font-weight: 600;
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.3);
+    }
+    
+    textarea.form-control {
+      min-height: 120px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+    
+    .form-note {
+      font-size: 0.8125rem;
+      color: #666;
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    /* Order Details Styles */
-    .order-details {
-      background: var(--card-bg);
-      padding: 15px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-      text-align: left;
-      border-left: 3px solid var(--primary);
+    .dark-mode .form-note {
+      color: #aaa;
     }
-
-    .order-details h3 {
-      margin-bottom: 10px;
+    
+    .form-note i {
+      width: 14px;
+      text-align: center;
       color: var(--primary);
     }
-
-    .order-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 8px;
-      font-size: 14px;
-    }
-
-    .order-label {
-      font-weight: 500;
-      color: #666;
-    }
-
-    body.dark-mode .order-label {
-      color: #aaa;
-    }
-
-    .order-value {
-      font-weight: 600;
-      text-align: right;
-    }
-
-    /* Countdown Timer Styles */
-    #countdown {
-      margin: 20px 0;
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--accent);
-    }
-
-    #time {
-      font-size: 20px;
-    }
-
-    /* Payment Confirmation Styles */
-    #paymentConfirmation {
-      margin-top: 20px;
-      display: none;
-    }
-
-    #fileName {
-      margin-top: 5px;
-      font-size: 12px;
-      color: var(--dark);
-      opacity: 0.7;
-    }
-
-    /* Payment Status Styles */
-    #paymentStatus {
-      font-size: 14px;
-      color: var(--accent);
-      margin-bottom: 15px;
-      display: none;
-    }
-
-    /* WhatsApp Input Styles */
-    #whatsappInput {
-      margin-bottom: 15px;
-    }
-
-    #whatsappNumber {
-      width: 100%;
-      padding: 12px;
+    
+    .price-display {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      padding: 1.25rem;
       border-radius: 8px;
-      border: 1px solid #ddd;
-      font-family: 'Poppins', sans-serif;
-      margin-top: 5px;
+      margin: 2rem 0;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.375rem;
+      color: white;
+      box-shadow: 0 5px 15px rgba(88, 101, 242, 0.3);
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
     }
-
-    body.dark-mode #whatsappNumber {
-      background-color: #2a2a3c;
-      color: var(--dark);
-      border-color: #444;
+    
+    .price-display::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 100%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+      transform: rotate(30deg);
     }
-
-    /* Cancel Button Styles */
-    .cancel-btn {
-      background-color: #FF3B30;
+    
+    .btn {
+      width: 100%;
+      padding: 1rem;
+      background: var(--primary);
       color: white;
       border: none;
-      padding: 12px;
       border-radius: 8px;
-      width: 100%;
+      font-family: inherit;
+      font-size: 1rem;
       font-weight: 600;
-      margin-top: 10px;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(88, 101, 242, 0.2);
+    }
+    
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(88, 101, 242, 0.3);
+    }
+    
+    .btn:active {
+      transform: translateY(0);
+    }
+    
+    /* Select2 Customization */
+    .select2-container .select2-selection--single {
+      height: 48px;
+      background: var(--secondary);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      transition: var(--transition);
     }
 
-    .cancel-btn:hover {
-      background-color: #FF2D20;
+    .dark-mode .select2-container .select2-selection--single {
+      background: var(--light);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+      line-height: 48px;
+      padding-left: 1.25rem;
+      color: var(--dark);
     }
 
-    /* Loading Spinner */
-    .spinner {
+    .dark-mode .select2-container--default .select2-selection--single .select2-selection__rendered {
+      color: var(--dark-text);
+    }
+    
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+      height: 48px;
+      right: 10px;
+    }
+    
+    .select2-container--default .select2-selection--single .select2-selection__arrow b {
+      border-color: #666 transparent transparent transparent;
+    }
+
+    .dark-mode .select2-container--default .select2-selection--single .select2-selection__arrow b {
+      border-color: #aaa transparent transparent transparent;
+    }
+    
+    .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+      border-color: transparent transparent #666 transparent;
+    }
+
+    .dark-mode .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+      border-color: transparent transparent #aaa transparent;
+    }
+    
+    .select2-dropdown {
+      background: var(--card-bg);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      box-shadow: var(--card-shadow);
+    }
+
+    .dark-mode .select2-dropdown {
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .select2-results__option {
+      padding: 10px 1.25rem;
+      color: var(--dark);
+      transition: var(--transition);
+    }
+
+    .dark-mode .select2-results__option {
+      color: var(--dark-text);
+    }
+    
+    .select2-results__option--highlighted {
+      background-color: var(--primary) !important;
+      color: white !important;
+    }
+    
+    .select2-results__option[aria-selected=true] {
+      background-color: rgba(88, 101, 242, 0.1);
+    }
+
+    .dark-mode .select2-results__option[aria-selected=true] {
+      background-color: rgba(88, 101, 242, 0.2);
+    }
+    
+    .select2-search--dropdown .select2-search__field {
+      background: var(--secondary);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      color: var(--dark);
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: var(--transition);
+    }
+
+    .dark-mode .select2-search--dropdown .select2-search__field {
+      background: var(--light);
+      border-color: rgba(255, 255, 255, 0.1);
+      color: var(--dark-text);
+    }
+    
+    /* Animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .order-card {
+      animation: fadeIn 0.4s ease-out forwards;
+    }
+    
+    .form-group {
+      opacity: 0;
+      animation: fadeIn 0.3s ease-out forwards;
+    }
+    
+    .form-group:nth-child(1) { animation-delay: 0.1s; }
+    .form-group:nth-child(2) { animation-delay: 0.2s; }
+    .form-group:nth-child(3) { animation-delay: 0.3s; }
+    .form-group:nth-child(4) { animation-delay: 0.4s; }
+    .form-group:nth-child(5) { animation-delay: 0.5s; }
+    .price-display { animation: fadeIn 0.4s ease-out 0.6s forwards; }
+    #submitBtn { animation: fadeIn 0.4s ease-out 0.7s forwards; }
+    
+    /* Responsive */
+    @media (max-width: 576px) {
+      body {
+        padding: 1rem;
+      }
+      
+      .order-header {
+        padding: 1.5rem 1rem;
+      }
+      
+      .order-body {
+        padding: 0 1rem 1.5rem;
+      }
+      
+      .order-header h1 {
+        font-size: 1.375rem;
+      }
+      
+      .price-display {
+        font-size: 1.25rem;
+        padding: 1rem;
+        margin: 1.5rem 0;
+      }
+    }
+
+    /* Theme Toggle */
+    .theme-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--primary);
+      border: none;
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 4px 12px rgba(88, 101, 242, 0.3);
+      z-index: 100;
+    }
+
+    .theme-toggle:hover {
+      background: var(--primary-dark);
+      transform: translateY(-3px) rotate(30deg);
+      box-shadow: 0 8px 20px rgba(88, 101, 242, 0.4);
+    }
+
+    .theme-toggle i {
+      font-size: 1.2rem;
+    }
+
+    /* Loading Indicator */
+    .loading {
       display: inline-block;
       width: 20px;
       height: 20px;
       border: 3px solid rgba(255,255,255,.3);
       border-radius: 50%;
-      border-top-color: #fff;
+      border-top-color: var(--primary);
       animation: spin 1s ease-in-out infinite;
-      margin-right: 8px;
+      margin-left: 10px;
     }
 
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
 
-    @media (max-width: 480px) {
-      .container {
-        padding: 15px;
-      }
-
-      .card {
-        padding: 20px;
-      }
-
-      .payment-btn {
-        min-width: 100px;
-        padding: 12px;
-      }
-    }
-    .order-row {
+    .api-loading {
       display: flex;
-      justify-content: space-between;
-      margin-bottom: 8px;
-      font-size: 14px;
-      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      margin-bottom: 15px;
     }
 
-    .order-label {
-      font-weight: 500;
-      color: #666;
-      min-width: 100px;
+    .api-loading .loading {
+      width: 25px;
+      height: 25px;
+      margin-right: 10px;
     }
 
-    .order-value {
-      font-weight: 600;
-      text-align: right;
-      flex: 1;
+    .api-loading span {
+      font-size: 0.9rem;
+      color: var(--dark);
+    }
+
+    .dark-mode .api-loading span {
+      color: var(--dark-text);
+    }
+
+    /* Error State */
+    .error-state {
+      text-align: center;
+      color: var(--danger);
+      padding: 15px;
+      border-radius: 8px;
+      background-color: rgba(237, 66, 69, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .error-state i {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .error-state p {
+      margin: 5px 0;
+    }
+
+    .error-state button {
+      margin-top: 15px;
+      padding: 8px 16px;
+      background: var(--danger);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .error-state button:hover {
+      background: #d63639;
+      transform: translateY(-2px);
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="card">
-      <div style="text-align: right;">
-        <label style="font-size: 14px;">
-          <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
-          Dark Mode
-        </label>
+  <div class="order-container">
+    <div class="order-card">
+      <div class="order-header">
+        <h1>Buat Pesanan Baru</h1>
       </div>
-
-      <h1>Payment Xyzopedia</h1>
-      <div class="subtitle">Pilih metode pembayaran yang tersedia</div>
-
-      <!-- Countdown Timer -->
-      <div id="countdown">
-        Selesaikan pembayaran dalam: <span id="time">05:00</span>
-      </div>
-
-      <!-- Payment Status Indicator -->
-      <div id="paymentStatus">
-        <i class="fas fa-circle-notch fa-spin"></i> Status: <span id="statusText">Pending</span>
-      </div>
-
-      <!-- Order Details Section -->
-      <div id="orderDetails" class="order-details">
-        <h3>Detail Pesanan</h3>
-        <div id="orderContent">
-          <!-- Detail pesanan akan ditampilkan di sini -->
+      
+      <div class="order-body">
+        <div id="apiLoading" class="api-loading">
+          <div class="loading"></div>
+          <span>Memuat data layanan...</span>
         </div>
-      </div>
-
-      <div class="section-title">Metode Pembayaran</div>
-      <div class="payment-methods">
-        <button class="payment-btn dana-btn" onclick="copyToClipboard('082295541679', 'DANA')">
-          <i class="fas fa-wallet"></i>
-          DANA
-        </button>
-        <button class="payment-btn gopay-btn" onclick="copyToClipboard('082295541679', 'GOPAY')">
-          <i class="fab fa-google-pay"></i>
-          GOPAY
-        </button>
-        <button class="payment-btn qris-btn" onclick="openModal()">
-          <i class="fas fa-qrcode"></i>
-          QRIS
-        </button>
-        <button class="payment-btn jago-btn" onclick="showBankDetails('jago')">
-          <i class="fas fa-university"></i>
-          Bank Jago
-        </button>
-      </div>
-
-      <!-- Bank Jago Details -->
-      <div id="jago-details" class="bank-details">
-        <div class="section-title">Detail Bank Jago</div>
-        <div class="bank-row">
-          <span class="bank-label">Nama Bank:</span>
-          <span class="bank-value">Bank Jago</span>
+        
+        <div id="errorContainer" style="display: none;"></div>
+        
+        <div class="form-group">
+          <label for="category" class="form-label">Kategori</label>
+          <select id="category" class="form-control"></select>
         </div>
-        <div class="bank-row">
-          <span class="bank-label">Nomor Rekening:</span>
-          <span class="bank-value">100911681763</span>
+        
+        <div class="form-group">
+          <label for="service" class="form-label">Layanan</label>
+          <select id="service" class="form-control"></select>
         </div>
-        <div class="bank-row">
-          <span class="bank-label">Nama Pemilik:</span>
-          <span class="bank-value">Maryam</span>
+        
+        <div class="form-group">
+          <label for="description" class="form-label">Deskripsi Layanan</label>
+          <textarea id="description" class="form-control" readonly></textarea>
+          <div class="form-note">
+            <i class="fas fa-info-circle"></i>
+            Deskripsi layanan yang dipilih
+          </div>
         </div>
-        <button class="payment-btn" onclick="copyToClipboard('100911681763', 'Bank Jago')" style="margin-top: 10px; width: 100%;">
-          <i class="fas fa-copy"></i>
-          Salin Nomor Rekening
-        </button>
-      </div>
-
-      <div class="section-title">Scan QR Code Pembayaran</div>
-
-      <div class="instructions">
-        <strong>Petunjuk Pembayaran:</strong>
-        <ol>
-          <li>Pilih salah satu metode pembayaran di atas</li>
-          <li>Nomor tujuan akan otomatis disalin</li>
-          <li>Lakukan transfer sesuai nominal</li>
-          <li>Isi Nomor Whatsapp</li>
-          <li>Unggah bukti pembayaran</li>
-          <li>Kirim Konfirmasi</li>
-        </ol>
-      </div>
-
-      <!-- WhatsApp Number Input -->
-      <div id="whatsappInput">
-        <label for="whatsappNumber" style="display: block; text-align: left; margin-bottom: 5px; color: var(--dark);">Nomor WhatsApp:</label>
-        <input type="text" id="whatsappNumber" placeholder="08xxxxxxx" required 
-               style="width: 70%; padding: 12px; border-radius: 8px; border: 1px solid #ddd;">
-      </div>
-
-      <!-- Payment Confirmation Section -->
-      <div id="paymentConfirmation">
-        <div class="section-title">Konfirmasi Pembayaran</div>
-        <div style="margin-bottom: 15px;">
-          <input type="file" id="paymentProof" accept="image/*" style="display: none;">
-          <button class="payment-btn" onclick="document.getElementById('paymentProof').click()" style="width: 100%;">
-            <i class="fas fa-upload"></i> Unggah Bukti Pembayaran
-          </button>
-          <div id="fileName" style="margin-top: 5px; font-size: 12px;"></div>
+        
+        <div class="form-group">
+          <label for="target" class="form-label">Link / Target</label>
+          <input type="text" id="target" class="form-control" placeholder="Contoh: @username atau link">
+          <div class="form-note">
+            <i class="fas fa-arrow-right"></i>
+            Masukkan username atau link target Anda
+          </div>
         </div>
-        <button class="payment-btn whatsapp-btn" onclick="confirmPayment()">
-          <i class="fas fa-paper-plane"></i> Kirim Konfirmasi
-        </button>
-        <button class="cancel-btn" onclick="cancelOrder()">
-          <i class="fas fa-times"></i> Batalkan Pesanan
+        
+        <div class="form-group">
+          <label for="quantity" class="form-label">Jumlah</label>
+          <input type="number" id="quantity" class="form-control" min="0">
+          <div id="minmax" class="form-note">
+            <i class="fas fa-calculator"></i>
+            <span>Masukkan jumlah pesanan</span>
+          </div>
+        </div>
+        
+        <div id="priceDisplay" class="price-display">Biaya: Rp 0</div>
+        
+        <button id="submitBtn" class="btn">
+          <i class="fas fa-paper-plane"></i>
+          Pesan Sekarang
         </button>
       </div>
     </div>
   </div>
 
-  <div id="modal" onclick="closeModal()">
-    <span class="close-btn">&times;</span>
-    <img src="https://files.catbox.moe/8v8ztf.jpg" alt="QRIS Besar" />
-  </div>
+  <button class="theme-toggle" id="themeToggle">
+    <i class="fas fa-moon"></i>
+  </button>
 
-  <div id="copyNotification" class="copy-notification"></div>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script>
+    const API_ID = '39538';
+    const API_KEY = '6ae58258127be8b7e2ee71e332a109600fac1c2fdd34304f828898cb0834e422';
+    const PRICE_MULTIPLIER = 1.5; // Harga dikali 1.5x
 
-  <script type="module">
-    // Import Firebase functions
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getDatabase, ref, set, update, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
-
-    // Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyBh9OSP70ZU2V42mN5CvQZYAIbTtiXA1vI",
-      authDomain: "xyzopediaa.firebaseapp.com",
-      databaseURL: "https://xyzopediaa-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "xyzopediaa",
-      storageBucket: "xyzopediaa.firebasestorage.app",
-      messagingSenderId: "662959521273",
-      appId: "1:662959521273:web:92edc4680b1c5e58e71128"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    // Telegram configuration
-    const BOT_TOKEN = '8018261370:AAHOM7rDNQqvEg3FW00PO91keoG6BYSizIE';
-    const CHAT_ID = '7604853514';
-
-    function generateShortOrderId(length = 8) {
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-      let id = '';
-      for (let i = 0; i < length; i++) {
-        id += chars.charAt(Math.floor(Math.random() * chars.length));
+    // Data fallback jika API tidak merespon
+    const LOCAL_FALLBACK_SERVICES = [
+      {
+        id: 1,
+        category_name: "Instagram",
+        service_name: "Followers Instagram",
+        price: 15000,
+        min: 100,
+        max: 10000,
+        description: "Followers Instagram berkualitas tinggi dengan pertumbuhan organik",
+        type: "Instagram"
+      },
+      {
+        id: 2,
+        category_name: "Instagram",
+        service_name: "Likes Instagram",
+        price: 12000,
+        min: 100,
+        max: 5000,
+        description: "Likes Instagram real dari pengguna aktif",
+        type: "Instagram"
+      },
+      {
+        id: 3,
+        category_name: "YouTube",
+        service_name: "Subscribers YouTube",
+        price: 20000,
+        min: 100,
+        max: 5000,
+        description: "Subscribers YouTube berkualitas dengan retensi tinggi",
+        type: "YouTube"
       }
-      return id;
+    ];
+
+    let services = [];
+    let selectedService = null;
+
+    // Theme Toggle Functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    const apiLoading = document.getElementById('apiLoading');
+    const errorContainer = document.getElementById('errorContainer');
+
+    // Check for saved theme preference or use preferred color scheme
+    const savedTheme = localStorage.getItem('theme') || 
+                    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+    // Apply the saved theme
+    if (savedTheme === 'dark') {
+        body.classList.add('dark-mode');
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+    } else {
+        body.classList.remove('dark-mode');
+        themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
     }
 
-    const orderId = generateShortOrderId();
-    let statusListener = null;
-
-    // Utility functions
-    function copyToClipboard(text, method) {
-      navigator.clipboard.writeText(text)
-        .then(() => showNotification(`Nomor ${method} disalin: ${text}`))
-        .catch(() => showNotification("Gagal menyalin nomor"));
-      
-      document.querySelectorAll('.payment-btn').forEach(btn => btn.classList.remove('active'));
-      event.currentTarget.classList.add('active');
-    }
-
-    function showNotification(message) {
-      const notification = document.getElementById("copyNotification");
-      notification.textContent = message;
-      notification.style.display = "block";
-
-      setTimeout(() => {
-        notification.style.display = "none";
-      }, 2500);
-    }
-
-    function openModal() {
-      document.getElementById("modal").style.display = "flex";
-      document.body.style.overflow = "hidden";
-      document.querySelectorAll('.payment-btn').forEach(btn => btn.classList.remove('active'));
-      document.querySelector('.qris-btn').classList.add('active');
-      hideAllBankDetails();
-    }
-
-    function closeModal() {
-      document.getElementById("modal").style.display = "none";
-      document.body.style.overflow = "auto";
-    }
-
-    function toggleDarkMode() {
-      document.body.classList.toggle('dark-mode');
-      document.documentElement.classList.toggle('dark-mode');
-      const isDark = document.body.classList.contains('dark-mode');
-      localStorage.setItem('darkMode', isDark);
-      document.getElementById("darkModeToggle").checked = isDark;
-    }
-
-    function showBankDetails(bank) {
-      hideAllBankDetails();
-      document.getElementById(`${bank}-details`).style.display = 'block';
-      document.querySelectorAll('.payment-btn').forEach(btn => btn.classList.remove('active'));
-      event.currentTarget.classList.add('active');
-    }
-    
-    function hideAllBankDetails() {
-      document.querySelectorAll('.bank-details').forEach(el => {
-        el.style.display = 'none';
-      });
-    }
-
-    function startCountdown() {
-      let minutes = 5;
-      let seconds = 0;
-      const countdownElement = document.getElementById('time');
-      const paymentConfirmation = document.getElementById('paymentConfirmation');
-      
-      paymentConfirmation.style.display = 'block';
-      
-      const interval = setInterval(() => {
-        if (seconds === 0) {
-          if (minutes === 0) {
-            clearInterval(interval);
-            countdownElement.textContent = "Waktu habis!";
-            countdownElement.style.color = "red";
-            return;
-          }
-          minutes--;
-          seconds = 59;
+    // Toggle theme on button click
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        
+        // Update icon and save preference
+        if (body.classList.contains('dark-mode')) {
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            localStorage.setItem('theme', 'dark');
         } else {
-          seconds--;
+            themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            localStorage.setItem('theme', 'light');
         }
-        
-        countdownElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-      }, 1000);
-    }
+    });
 
-    function displayOrderDetails() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const orderDetails = document.getElementById('orderContent');
+    // Fungsi untuk menampilkan error
+    function showError(message, showRetry = true) {
+      apiLoading.style.display = 'none';
       
-      if (urlParams.toString()) {
-          document.getElementById('orderDetails').style.display = 'block';
-          
-          let html = '';
-          let orderText = '';
-          
-          if (urlParams.has('name') && urlParams.has('price')) {
-              html = `
-                  <div class="order-row">
-                      <span class="order-label">Produk:</span>
-                      <span class="order-value">${decodeURIComponent(urlParams.get('name'))}</span>
-                  </div>
-                  <div class="order-row">
-                      <span class="order-label">Harga:</span>
-                      <span class="order-value">${decodeURIComponent(urlParams.get('price'))}</span>
-                  </div>
-                  <div class="order-row">
-                      <span class="order-label">Durasi:</span>
-                      <span class="order-value">${urlParams.has('duration') ? decodeURIComponent(urlParams.get('duration')) : '-'}</span>
-                  </div>
-              `;
-              
-              orderText = `Produk: ${decodeURIComponent(urlParams.get('name'))}\nHarga: ${decodeURIComponent(urlParams.get('price'))}\nDurasi: ${urlParams.has('duration') ? decodeURIComponent(urlParams.get('duration')) : '-'}`;
-          }
-          else if (urlParams.has('plan') && urlParams.has('price')) {
-              html = `
-                  <div class="order-row">
-                      <span class="order-label">Layanan:</span>
-                      <span class="order-value"> ${decodeURIComponent(urlParams.get('plan'))}</span>
-                  </div>
-                  <div class="order-row">
-                      <span class="order-label">Harga:</span>
-                      <span class="order-value">Rp ${parseInt(urlParams.get('price')).toLocaleString('id-ID')}</span>
-                  </div>
-              `;
-              
-              orderText = `Layanan: ${decodeURIComponent(urlParams.get('plan'))}\nHarga: Rp ${parseInt(urlParams.get('price')).toLocaleString('id-ID')}`;
-          }
-          else if (urlParams.has('plan') && urlParams.has('cpu') && urlParams.has('price')) {
-              html = `
-                  <div class="order-row">
-                      <span class="order-label">Paket:</span>
-                      <span class="order-value">${decodeURIComponent(urlParams.get('plan'))}</span>
-                  </div>
-                  <div class="order-row">
-                      <span class="order-label">CPU:</span>
-                      <span class="order-value">${decodeURIComponent(urlParams.get('cpu'))}</span>
-                  </div>
-                  <div class="order-row">
-                      <span class="order-label">Harga:</span>
-                      <span class="order-value">Rp ${parseInt(urlParams.get('price')).toLocaleString('id-ID')}/bulan</span>
-                  </div>
-              `;
-              
-              orderText = `Paket: ${decodeURIComponent(urlParams.get('plan'))}\nCPU: ${decodeURIComponent(urlParams.get('cpu'))}\nHarga: Rp ${parseInt(urlParams.get('price')).toLocaleString('id-ID')}/bulan`;
-          }
-          else if (urlParams.has('platform') && urlParams.has('serviceName')) {
-              html = `
-                  <div class="order-row">
-                      <span class="order-label">Platform:</span>
-                      <span class="order-value">${decodeURIComponent(urlParams.get('platform'))}</span>
-                  </div>
-                  <div class="order-row">
-                      <span class="order-label">Layanan:</span>
-                      <span class="order-value">${decodeURIComponent(urlParams.get('serviceName'))}</span>
-                  </div>
-                  <div class="order-row">
-                      <span class="order-label">Jumlah:</span>
-                      <span class="order-value">${urlParams.get('quantity')}</span>
-                  </div>
-                  <div class="order-row">
-                      <span class="order-label">Target:</span>
-                      <span class="order-value">${decodeURIComponent(urlParams.get('target'))}</span>
-                  </div>
-                  <div class="order-row">
-                      <span class="order-label">Total:</span>
-                      <span class="order-value">Rp ${parseInt(urlParams.get('price')).toLocaleString('id-ID')}</span>
-                  </div>
-              `;
-              
-              orderText = `Platform: ${decodeURIComponent(urlParams.get('platform'))}\nLayanan: ${decodeURIComponent(urlParams.get('serviceName'))}\nJumlah: ${urlParams.get('quantity')}\nTarget: ${decodeURIComponent(urlParams.get('target'))}\nTotal: Rp ${parseInt(urlParams.get('price')).toLocaleString('id-ID')}`;
-          }
-          
-          orderDetails.innerHTML = html;
-          
-          if (orderText) {
-            sendOrderNotification(orderText);
-          }
-      } else {
-          document.getElementById('orderDetails').style.display = 'none';
-      }
-    }
-
-    // Telegram notification for new order
-    function sendOrderNotification(orderDetails) {
-      const message = `🔔 *Pesanan Baru* 🔔\n\n${orderDetails}\n\n🆔 Order ID: ${orderId}`;
+      let errorHTML = `
+        <div class="error-state">
+          <i class="fas fa-exclamation-triangle"></i>
+          <p><strong>Gagal memuat data layanan</strong></p>
+          <p>${message}</p>
+      `;
       
-      fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          chat_id: CHAT_ID,
-          text: message,
-          parse_mode: 'Markdown'
-        })
-      }).catch(error => console.error('Error sending to Telegram:', error));
+      if (showRetry) {
+        errorHTML += `
+          <button onclick="window.location.reload()">
+            <i class="fas fa-sync-alt"></i> Coba Lagi
+          </button>
+        `;
+      }
+      
+      errorHTML += `</div>`;
+      
+      errorContainer.innerHTML = errorHTML;
+      errorContainer.style.display = 'block';
     }
 
-    // Payment confirmation function
-    window.confirmPayment = async function() {
-      const waNumber = document.getElementById('whatsappNumber').value.trim();
-      if (!waNumber) {
-        showNotification('Harap isi nomor WhatsApp');
-        return;
-      }
-
-      // Show loading state
-      const confirmBtn = document.querySelector('.whatsapp-btn');
-      const originalText = confirmBtn.innerHTML;
-      confirmBtn.innerHTML = '<span class="spinner"></span> Mengirim...';
-      confirmBtn.disabled = true;
-
+    // Fungsi untuk mengambil data layanan dari API dengan retry mechanism
+    async function fetchServicesWithRetry(retries = 3, delay = 1000) {
       try {
-        // Show pending status
-        document.getElementById('paymentStatus').style.display = 'block';
-        document.getElementById('statusText').textContent = 'Pending';
-        
-        // Get order details
-        const orderDetails = document.getElementById('orderContent').innerText;
-        const selectedMethod = document.querySelector('.payment-btn.active')?.innerText || 'QRIS';
-        
-        // Save to Firebase
-        await set(ref(db, 'orders/' + orderId), {
-          status: 'pending',
-          whatsapp: waNumber,
-          method: selectedMethod,
-          orderDetails: orderDetails,
-          timestamp: Date.now()
-        });
-
-        // Setup Firebase listener for status changes
-        if (statusListener) {
-          statusListener(); // Remove previous listener if exists
-        }
-        
-        const statusRef = ref(db, 'orders/' + orderId + '/status');
-        statusListener = onValue(statusRef, (snapshot) => {
-          const status = snapshot.val();
-          console.log('Status update received:', status);
-          
-          if (status === 'confirmed') {
-            const urlParams = new URLSearchParams(window.location.search);
-            window.location.href = 'success.html?' + urlParams.toString();
-          } else if (status === 'canceled') {
-            showNotification("Pesanan dibatalkan oleh admin");
-            setTimeout(() => location.reload(), 3000);
+        const response = await axios.post('https://ordersosmed.id/api-1/service', {
+          api_id: API_ID,
+          api_key: API_KEY
+        }, {
+          timeout: 10000, // timeout 10 detik
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
           }
         });
-
-        // Prepare Telegram message with interactive buttons
-        const message = `✅ *Konfirmasi Pembayaran Baru*\n\n` +
-                       `🆔 Order ID: ${orderId}\n` +
-                       `📱 WA: ${waNumber}\n` +
-                       `💳 Metode: ${selectedMethod}\n\n` +
-                       `📋 Detail:\n${orderDetails}`;
-
-        // Send to Telegram with action buttons
-        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: CHAT_ID,
-            text: message,
-            parse_mode: 'Markdown',
-            reply_markup: {
-              inline_keyboard: [
-                [
-                  { 
-                    text: "✅ Konfirmasi Pembayaran", 
-                    callback_data: `confirm_${orderId}`
-                  },
-                  {
-                    text: "❌ Batalkan Pesanan",
-                    callback_data: `cancel_${orderId}`
-                  }
-                ]
-              ]
-            }
-          })
-        });
-
-        // Send payment proof if available
-        const fileInput = document.getElementById('paymentProof');
-        if (fileInput.files.length > 0) {
-          const formData = new FormData();
-          formData.append('chat_id', CHAT_ID);
-          formData.append('photo', fileInput.files[0]);
-          formData.append('caption', `Bukti Pembayaran - Order ID: ${orderId}`);
-          
-          await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
-            method: 'POST',
-            body: formData
+        
+        if (response.data && response.data.data) {
+          // Terapkan multiplier harga
+          const processedServices = response.data.data.map(service => {
+            return {
+              ...service,
+              price: Math.round(service.price * PRICE_MULTIPLIER)
+            };
           });
+          
+          // Urutkan layanan berdasarkan harga (termurah ke termahal)
+          processedServices.sort((a, b) => a.price - b.price);
+          
+          return processedServices;
+        } else {
+          throw new Error('Format data tidak valid dari server');
         }
-
-        showNotification('Konfirmasi pembayaran berhasil dikirim!');
-
       } catch (error) {
-        console.error('Payment confirmation error:', error);
-        document.getElementById('statusText').textContent = 'Gagal mengirim';
-        showNotification('Gagal mengirim konfirmasi');
-      } finally {
-        confirmBtn.innerHTML = originalText;
-        confirmBtn.disabled = false;
-      }
-    };
-
-    // Cancel order function
-    window.cancelOrder = async function() {
-      const waNumber = document.getElementById('whatsappNumber').value.trim();
-      if (!waNumber) {
-        showNotification('Harap isi nomor WhatsApp');
-        return;
-      }
-
-      if (!confirm('Apakah Anda yakin ingin membatalkan pesanan?')) {
-        return;
-      }
-
-      try {
-        // Update Firebase status
-        await update(ref(db, 'orders/' + orderId), { 
-          status: 'canceled',
-          canceledAt: Date.now()
-        });
-
-        // Send Telegram notification
-        const orderDetails = document.getElementById('orderContent').innerText;
-        const message = `❌ *Pesanan Dibatalkan*\n\n` +
-                       `🆔 Order ID: ${orderId}\n` +
-                       `📱 WA: ${waNumber}\n\n` +
-                       `📋 Detail:\n${orderDetails}`;
-
-        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: CHAT_ID,
-            text: message,
-            parse_mode: 'Markdown'
-          })
-        });
-
-        showNotification('Pesanan telah dibatalkan');
-        setTimeout(() => location.reload(), 2000);
-
-      } catch (error) {
-        console.error('Error canceling order:', error);
-        showNotification('Gagal membatalkan pesanan');
-      }
-    };
-
-    // File upload handler
-    document.getElementById('paymentProof').addEventListener('change', function(e) {
-      const fileName = e.target.files[0]?.name || 'Tidak ada file dipilih';
-      document.getElementById('fileName').textContent = fileName;
-    });
-
-    // Initialize the page
-    window.addEventListener('DOMContentLoaded', () => {
-      displayOrderDetails();
-      startCountdown();
-      
-      // Initialize dark mode
-      const darkModeEnabled = localStorage.getItem('darkMode') === 'true';
-      if (darkModeEnabled) {
-        document.body.classList.add('dark-mode');
-        document.documentElement.classList.add('dark-mode');
-      }
-      document.getElementById("darkModeToggle").checked = darkModeEnabled;
-      
-      // Close modal when clicking outside
-      document.getElementById("modal").addEventListener('click', function(e) {
-        if (e.target === this) {
-          closeModal();
+        console.error('Error fetching services:', error);
+        
+        if (retries > 0) {
+          await new Promise(resolve => setTimeout(resolve, delay));
+          return fetchServicesWithRetry(retries - 1, delay * 2); // Exponential backoff
         }
+        
+        throw error;
+      }
+    }
+
+    // Fungsi untuk mengisi dropdown kategori
+    function populateCategories(services) {
+      const categories = [...new Set(services.map(s => s.category_name))];
+      
+      $('#category').empty().append('<option value="">Pilih kategori</option>');
+      categories.forEach(cat => {
+        $('#category').append(`<option value="${cat}">${cat}</option>`);
       });
-    });
-  </script>
-</body>
-</html>
+      
+      // Inisialisasi Select2 untuk kategori
+      $('#category').select2({
+        placeholder: "Pilih kategori",
+        width: '100%',
+        dropdownParent: $('.order-card')
+      });
+    }
+
+    // Fungsi untuk mengisi dropdown layanan berdasarkan kategori
+    function populateServices(category) {
+      const filtered = services.filter(s => s.category_name === category);
+      
+      $('#service').empty().append('<option value="">Pilih layana

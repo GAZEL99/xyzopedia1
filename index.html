@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suntik Sosmed - XYZOPEDIA.ID</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --bg-dark: #0A1128;
+            --bg-gradient: linear-gradient(135deg, #001F54, #0A1128);
+            --primary: #034078;
+            --primary-alt: #1282A2;
+            --accent: #4CC9F0;
+            --text-light: #E0FBFC;
+            --text: #FDFDFF;
+            --border: rgba(3, 64, 120, 0.4);
+            --card-bg: rgba(0, 31, 84, 0.8);
+            --error: #E74C3C;
+            --success: #2ECC71;
+            --warning: #F1C40F;
+            --shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            --card-shadow-hover: 0 12px 30px rgba(3, 64, 120, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--text);
+            overflow-x: hidden;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--bg-gradient);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            border-bottom: 1px solid var(--border);
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            color: var(--accent);
+            font-size: 2.2rem;
+            animation: rotateIn 1.5s ease-out forwards;
+        }
+
+        .logo-text {
+            position: relative;
+        }
+
+        .logo-text span {
+            color: var(--primary-alt);
+        }
+
+        .logo-text::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .logo:hover .logo-text::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--card-bg);
+            border-radius: 18px;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+
+        .card:hover {
+            transform: translateY(-12px) scale(1.03);
+            box-shadow: 0 15px 35px rgba(3, 64, 120, 0.6);
+            border-color: var(--primary-alt);
+        }
+
+        .header {
+            background: var(--bg-gradient);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+            font-weight: 300;
+            color: var(--text-light);
+        }
+
+        .form-container {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background-color: rgba(0, 0, 0, 0.4);
+            color: var(--text);
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-alt);
+            box-shadow: 0 0 0 3px rgba(18, 130, 162, 0.3);
+        }
+
+        /* Price Display */
+        .price-display {
+            display: flex;
+            justify-content: space-between;
+            background: linear-gradient(to right, rgba(30, 136, 229, 0.1), rgba(33, 150, 243, 0.1));
+            padding: 20px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border: 2px dashed var(--primary-alt);
+        }
+
+        .price-item {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .price-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 40px;
+            width: 2px;
+            background: linear-gradient(to bottom, transparent, var(--primary-alt), transparent);
+        }
+
+        .price-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+
+        .price-value {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--accent);
+        }
+
+        /* Button Styles */
+        .btn {
+            display: block;
+            width: 100%;
+            background: var(--primary-alt);
+            color: var(--bg-dark);
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            text-decoration: none;
+            margin-top: 25px;
+            box-shadow: 0 5px 15px rgba(18, 130, 162, 0.4);
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(18, 130, 162, 0.6);
+        }
+
+        .service-info {
+            background: linear-gradient(to right, rgba(30, 136, 229, 0.1), rgba(33, 150, 243, 0.1));
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 4px solid var(--primary-alt);
+            font-size: 0.95rem;
+        }
+
+        .service-info p {
+            margin: 8px 0;
+            color: var(--text-light);
+        }
+
+        .service-info ul {
+            padding-left: 20px;
+            margin: 8px 0;
+        }
+
+        .service-info li {
+            margin-bottom: 8px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .total-price {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: linear-gradient(to right, rgba(30, 136, 229, 0.1), rgba(33, 150, 243, 0.1));
+            border-radius: 12px;
+            border: 2px solid var(--primary-alt);
+        }
+
+        .total-label {
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+
+        .total-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .note {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 8px;
+            font-style: italic;
+            font-weight: 300;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes rotateIn {
+            from { transform: rotateY(90deg) scale(0); opacity: 0; }
+            to { transform: rotateY(0) scale(1); opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .price-display {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .price-item:not(:last-child)::after {
+                display: none;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .total-value {
+                font-size: 1.5rem;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="#" class="logo">
+            <i class="fas fa-gamepad logo-icon"></i>
+            <div class="logo-text">xyzo<span>pedia</span>.id</div>
+        </a>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <h1>Order Layanan SMM</h1>
+                <p>Tingkatkan engagement sosial media Anda dengan layanan kami</p>
+            </div>
+            
+            <div class="form-container">
+                <div class="form-group">
+                    <label for="category">Pilih Kategori</label>
+                    <select class="form-control" id="category">
+                        <option value="" disabled selected>-- Pilih Kategori --</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="service">Pilih Layanan</label>
+                    <select class="form-control" id="service">
+                        <option value="" disabled selected>-- Pilih Layanan --</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="quantity">Jumlah</label>
+                    <input type="number" class="form-control" id="quantity" min="100" step="100" value="1000">
+                </div>
+                
+                <div class="price-display">
+                    <div class="price-item">
+                        <div class="price-label">Harga/1000</div>
+                        <div class="price-value" id="pricePerK">Rp 0</div>
+                    </div>
+                    <div class="price-item">
+                        <div class="price-label">Jumlah</div>
+                        <div class="price-value" id="quantityDisplay">0</div>
+                    </div>
+                    <div class="price-item">
+                        <div class="price-label">Total Dasar</div>
+                        <div class="price-value" id="totalPrice">Rp 0</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="target">Link Target</label>
+                    <input type="text" class="form-control" id="target" placeholder="https://instagram.com/username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="whatsapp">Nomor WhatsApp</label>
+                    <input type="text" class="form-control" id="whatsapp" placeholder="08xxxxxxxxxx">
+                </div>
+                
+                <div class="service-info">
+                    <p><strong>Informasi Layanan:</strong></p>
+                    <ul>
+                        <li>Mulai diproses dalam 5-15 menit setelah pembayaran</li>
+                        <li>Garansi 30 hari untuk drop (kecuali stated otherwise)</li>
+                        <li>Proses natural dan aman untuk akun Anda</li>
+                        <li>Dukungan pelanggan 24/7</li>
+                    </ul>
+                </div>
+                
+                <div class="total-price">
+                    <div class="total-label">Total Pembayaran (Termasuk Markup)</div>
+                    <div class="total-value" id="finalPrice">Rp 0</div>
+                    <div class="note">*Harga sudah termasuk PPN</div>
+                </div>
+                
+                <button class="btn" id="orderBtn">
+                    Pesan Sekarang <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>&copy; 2023 XYZOPEDIA.ID - Layanan Peningkatan Sosial Media</p>
+        </div>
+    </div>
+
+    <script>
+        // Konfigurasi API dan Telegram
+        const API_ID = "30684";              // ganti API ID kamu
+        const API_KEY = "yejckj-qfqtmf-cf7s9u-sap41n-nuu645";  // ganti API Key kamu
+        const BOT_TOKEN = "8251232340:AAFFsdGihRSPpgyA6BUmPMKj_DOgrHRRDag"; // ganti token bot telegram
+        const CHAT_ID = "7091302327";  // ganti chat id telegram
+        
+        let servicesData = [];
+
+        // Aturan markup
+        function getMarkup(basePrice) {
+            if (basePrice < 100) return 50;
+            if (basePrice < 1000) return 100;
+            if (basePrice < 2000) return 300;
+            if (basePrice < 5000) return 1000;
+            if (basePrice < 10000) return 2000;
+            if (basePrice < 20000) return 3000;
+            if (basePrice < 30000) return 4000;
+            if (basePrice < 40000) return 5000;
+            if (basePrice < 50000) return 6000;
+            let extra = Math.floor((basePrice - 50000) / 10000) * 1000;
+            return 6000 + extra;
+        }
+
+        // Ambil data layanan dari Medanpedia
+        async function loadServices() {
+            try {
+                const res = await fetch("https://api.medanpedia.co.id/services", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ api_id: API_ID, api_key: API_KEY })
+                });
+                const data = await res.json();
+                servicesData = data;
+
+                const categories = [...new Set(data.map(item => item.category))];
+                const categorySelect = document.getElementById("category");
+                categories.forEach(cat => {
+                    let opt = document.createElement("option");
+                    opt.value = cat;
+                    opt.textContent = cat;
+                    categorySelect.appendChild(opt);
+                });
+            } catch (err) {
+                console.error("Gagal load services:", err);
+                alert("Gagal memuat daftar layanan. Silakan refresh halaman.");
+            }
+        }
+
+        // Isi layanan sesuai kategori
+        document.getElementById("category").addEventListener("change", function() {
+            const selectedCategory = this.value;
+            const serviceSelect = document.getElementById("service");
+            serviceSelect.innerHTML = '<option value="" disabled selected>-- Pilih Layanan --</option>';
+            
+            const filtered = servicesData.filter(item => item.category === selectedCategory);
+            filtered.forEach(svc => {
+                let opt = document.createElement("option");
+                opt.value = svc.service;
+                opt.textContent = `${svc.name} - Rp ${svc.rate.toLocaleString('id-ID')}/1000`;
+                serviceSelect.appendChild(opt);
+            });
+            
+            // Reset harga setelah mengubah kategori
+            updatePrices();
+        });
+
+        // Update harga
+        function updatePrices() {
+            const serviceId = document.getElementById("service").value;
+            const quantity = parseInt(document.getElementById("quantity").value) || 0;
+            const service = servicesData.find(svc => svc.service == serviceId);
+
+            if (service) {
+                const basePrice = Math.round((service.rate * quantity) / 1000);
+                const markup = getMarkup(basePrice);
+                const finalTotal = basePrice + markup;
+
+                document.getElementById("pricePerK").textContent = `Rp ${service.rate.toLocaleString('id-ID')}`;
+                document.getElementById("quantityDisplay").textContent = quantity.toLocaleString('id-ID');
+                document.getElementById("totalPrice").textContent = `Rp ${basePrice.toLocaleString('id-ID')}`;
+                document.getElementById("finalPrice").textContent = `Rp ${finalTotal.toLocaleString('id-ID')}`;
+            } else {
+                // Reset jika tidak ada layanan yang dipilih
+                document.getElementById("pricePerK").textContent = "Rp 0";
+                document.getElementById("quantityDisplay").textContent = "0";
+                document.getElementById("totalPrice").textContent = "Rp 0";
+                document.getElementById("finalPrice").textContent = "Rp 0";
+            }
+        }
+
+        // Event listeners untuk service dan quantity
+        document.getElementById("service").addEventListener("change", updatePrices);
+        document.getElementById("quantity").addEventListener("input", updatePrices);
+
+        // Kirim pesan ke Telegram
+        async function sendToTelegram(service, quantity, target, whatsapp, total) {
+            const message = `
+🛒 *Pesanan Baru*
+━━━━━━━━━━━━━━━
+📌 Layanan: ${service}
+📦 Jumlah: ${quantity}
+🎯 Target: ${target}
+📱 WhatsApp: ${whatsapp}
+💰 Total: Rp ${total.toLocaleString('id-ID')}
+            `;
+            
+            try {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: message,
+                        parse_mode: "Markdown"
+                    })
+                });
+                return true;
+            } catch (error) {
+                console.error("Error sending to Telegram:", error);
+                return false;
+            }
+        }
+
+        // Tombol order
+        document.getElementById("orderBtn").addEventListener("click", async () => {
+            const serviceId = document.getElementById("service").value;
+            const quantity = parseInt(document.getElementById("quantity").value) || 0;
+            const target = document.getElementById("target").value;
+            const whatsapp = document.getElementById("whatsapp").value;
+            const service = servicesData.find(svc => svc.service == serviceId);
+
+            if (!serviceId) {
+                alert("Silakan pilih layanan terlebih dahulu!");
+                return;
+            }
+
+            if (quantity < 100) {
+                alert("Jumlah minimal adalah 100!");
+                return;
+            }
+
+            if (!target) {
+                alert("Silakan masukkan link target!");
+                return;
+            }
+
+            if (!whatsapp) {
+                alert("Silakan masukkan nomor WhatsApp!");
+                return;
+            }
+
+            const basePrice = Math.round((service.rate * quantity) / 1000);
+            const finalTotal = basePrice + getMarkup(basePrice);
+
+            // Show loading
+            const orderBtn = document.getElementById("orderBtn");
+            const originalText = orderBtn.innerHTML;
+            orderBtn.innerHTML = 'Memproses... <i class="fas fa-spinner fa-spin"></i>';
+            orderBtn.disabled = true;
+
+            // Kirim ke Telegram
+            const success = await sendToTelegram(service.name, quantity, target, whatsapp, finalTotal);
+            
+            if (success) {
+                alert("Pesanan berhasil dibuat! Detail sudah dikirim ke Telegram.");
+            } else {
+                alert("Pesanan berhasil dibuat tetapi gagal mengirim notifikasi ke Telegram.");
+            }
+            
+            // Reset button
+            orderBtn.innerHTML = originalText;
+            orderBtn.disabled = false;
+        });
+
+        // Load data layanan saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            loadServices();
+        });
+    </script>
+</body>
+</html>

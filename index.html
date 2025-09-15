@@ -46,7 +46,6 @@
             padding: 0 20px;
         }
 
-        /* Header Styles */
         header {
             background: var(--bg-gradient);
             padding: 1rem 2rem;
@@ -103,7 +102,6 @@
             transform-origin: left;
         }
 
-        /* Card Styles */
         .card {
             background: var(--card-bg);
             border-radius: 18px;
@@ -182,7 +180,6 @@
             box-shadow: 0 0 0 3px rgba(18, 130, 162, 0.3);
         }
 
-        /* Price Display */
         .price-display {
             display: flex;
             justify-content: space-between;
@@ -223,7 +220,6 @@
             color: var(--accent);
         }
 
-        /* Button Styles */
         .btn {
             display: block;
             width: 100%;
@@ -314,7 +310,6 @@
             font-size: 0.9rem;
         }
 
-        /* Loading Spinner */
         .spinner {
             display: inline-block;
             width: 20px;
@@ -330,7 +325,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Animations */
         @keyframes fadeInDown {
             0% { opacity: 0; transform: translateY(-20px); }
             100% { opacity: 1; transform: translateY(0); }
@@ -346,7 +340,6 @@
             to { transform: rotateY(0) scale(1); opacity: 1; }
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .price-display {
                 flex-direction: column;
@@ -396,7 +389,7 @@
                 
                 <div class="form-group">
                     <label for="service">Pilih Layanan</label>
-                    <select class="form-control" id="service">
+                    <select class="form-control" id="service" disabled>
                         <option value="" disabled selected>-- Pilih Layanan --</option>
                     </select>
                 </div>
@@ -447,8 +440,8 @@
                     <div class="note">*Harga sudah termasuk PPN</div>
                 </div>
                 
-                <button class="btn" id="orderBtn">
-                    Pesan Sekarang <i class="fas fa-arrow-right"></i>
+                <button class="btn" id="orderBtn" disabled>
+                    Memuat Layanan... <i class="fas fa-spinner fa-spin"></i>
                 </button>
             </div>
         </div>
@@ -459,15 +452,15 @@
     </div>
 
     <script>
-        // Konfigurasi API dan Telegram
-        const API_ID = "30684";              // ganti API ID kamu
-        const API_KEY = "yejckj-qfqtmf-cf7s9u-sap41n-nuu645";  // ganti API Key kamu
-        const BOT_TOKEN = "8251232340:AAFFsdGihRSPpgyA6BUmPMKj_DOgrHRRDag"; // ganti token bot telegram
-        const CHAT_ID = "7091302327";  // ganti chat id telegram
-        
-        let servicesData = [];
+        // PENTING: simpan API_KEY / BOT_TOKEN di server, bukan di client. Ini contoh perbaikan logika fetch.
+        const API_ID = "30684";             
+        const API_KEY = "yejckj-qfqtmf-cf7s9u-sap41n-nuu645";  
+        const BOT_TOKEN = "8251232340:AAFFsdGihRSPpgyA6BUmPMKj_DOgrHRRDag";
+        const CHAT_ID = "7091302327";
 
-        // Aturan markup
+        let servicesData = []; // array layanan setelah diproses
+
+        // Aturan markup (sama seperti sebelumnya)
         function getMarkup(basePrice) {
             if (basePrice < 100) return 50;
             if (basePrice < 1000) return 100;
@@ -482,68 +475,144 @@
             return 6000 + extra;
         }
 
-        // Ambil data layanan dari Medanpedia
+        // Robust parsing: terima beberapa bentuk respons API
+        function normalizeServices(raw) {
+            // Jika sudah array
+            if (Array.isArray(raw)) return raw.map(normalizeItem);
+
+            // Jika ada properti umum seperti data / services / result
+            const possible = raw.data || raw.services || raw.result || raw.items || raw;
+            if (Array.isArray(possible)) return possible.map(normalizeItem);
+
+            // Jika tidak bisa diparse, kembalikan array kosong
+            return [];
+        }
+
+        function normalizeItem(item) {
+            // Standardisasi field harga/rate dan nama/category
+            return {
+                // beberapa API menggunakan id/service/price/rate/name
+                id: item.id ?? item.service ?? item.service_id ?? item.s_id ?? null,
+                service: item.service ?? item.id ?? item.service_id ?? item.s_id ?? null,
+                name: item.name ?? item.title ?? item.service ?? `Layanan ${item.id ?? ''}`,
+                rate: Number(item.rate ?? item.price ?? item.harga ?? item.price_per_1000 ?? 0) || 0,
+                category: item.category ?? item.kategori ?? item.group ?? 'Umum',
+                raw: item
+            };
+        }
+
         async function loadServices() {
+            const endpoint = "https://api.medanpedia.co.id/services";
+            let fetched = null;
             try {
-                const res = await fetch("https://api.medanpedia.co.id/services", {
+                // Coba POST seperti awal
+                const res = await fetch(endpoint, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ api_id: API_ID, api_key: API_KEY })
                 });
-                const data = await res.json();
-                servicesData = data;
 
-                const categories = [...new Set(data.map(item => item.category))];
-                const categorySelect = document.getElementById("category");
-                categories.forEach(cat => {
-                    let opt = document.createElement("option");
-                    opt.value = cat;
-                    opt.textContent = cat;
-                    categorySelect.appendChild(opt);
-                });
+                // Jika status bukan 2xx, coba GET sebagai fallback
+                if (!res.ok) {
+                    console.warn("POST ke API gagal, mencoba GET sebagai fallback. status:", res.status);
+                    const res2 = await fetch(`${endpoint}?api_id=${encodeURIComponent(API_ID)}&api_key=${encodeURIComponent(API_KEY)}`);
+                    if (!res2.ok) throw new Error("GET fallback gagal: " + res2.status);
+                    fetched = await res2.json();
+                } else {
+                    fetched = await res.json();
+                }
+
+                // Normalize
+                const arr = normalizeServices(fetched);
+                if (arr.length === 0) throw new Error("Tidak ada layanan ditemukan pada respons API.");
+
+                servicesData = arr;
+
+                populateCategories();
+                document.getElementById("orderBtn").disabled = false;
+                document.getElementById("orderBtn").innerHTML = 'Pesan Sekarang <i class="fas fa-arrow-right"></i>';
+                document.getElementById("service").disabled = false;
+                updatePrices();
             } catch (err) {
                 console.error("Gagal load services:", err);
-                alert("Gagal memuat daftar layanan. Silakan refresh halaman.");
+                // Jika gagal (misal CORS atau API unreachable), gunakan fallback sample agar UI tetap berfungsi
+                const sample = [
+                    { id: 1, service: "srv1", name: "Follower Instagram Real", rate: 12000, category: "Instagram" },
+                    { id: 2, service: "srv2", name: "Like Instagram", rate: 8000, category: "Instagram" },
+                    { id: 3, service: "srv3", name: "Follower TikTok", rate: 15000, category: "TikTok" },
+                    { id: 4, service: "srv4", name: "View YouTube", rate: 20000, category: "YouTube" }
+                ];
+                servicesData = sample.map(normalizeItem);
+                populateCategories();
+                document.getElementById("service").disabled = false;
+                document.getElementById("orderBtn").disabled = false;
+                document.getElementById("orderBtn").innerHTML = 'Pesan Sekarang <i class="fas fa-arrow-right"></i>';
+                updatePrices();
+                alert("Gagal memuat layanan dari API. Menggunakan data contoh lokal. Periksa koneksi atau konfigurasi API (CORS/credential).");
             }
         }
 
-        // Isi layanan sesuai kategori
+        // Isi kategori berdasarkan servicesData, gunakan index sebagai nilai option untuk reliable lookup
+        function populateCategories() {
+            const categories = [...new Set(servicesData.map(s => s.category || 'Umum'))];
+            const categorySelect = document.getElementById("category");
+            categorySelect.innerHTML = '<option value="" disabled selected>-- Pilih Kategori --</option>';
+            categories.forEach(cat => {
+                let opt = document.createElement("option");
+                opt.value = cat;
+                opt.textContent = cat;
+                categorySelect.appendChild(opt);
+            });
+
+            // Jika hanya 1 kategori, pilih otomatis dan trigger change
+            if (categories.length === 1) {
+                categorySelect.value = categories[0];
+                categorySelect.dispatchEvent(new Event('change'));
+            }
+        }
+
+        // Ketika kategori berubah, isi daftar layanan (option value = index pada servicesData)
         document.getElementById("category").addEventListener("change", function() {
             const selectedCategory = this.value;
             const serviceSelect = document.getElementById("service");
             serviceSelect.innerHTML = '<option value="" disabled selected>-- Pilih Layanan --</option>';
-            
-            const filtered = servicesData.filter(item => item.category === selectedCategory);
-            filtered.forEach(svc => {
+
+            const filtered = servicesData
+                .map((item, idx) => ({ item, idx }))
+                .filter(x => (x.item.category || 'Umum') === selectedCategory);
+
+            filtered.forEach(({ item, idx }) => {
                 let opt = document.createElement("option");
-                opt.value = svc.service;
-                opt.textContent = `${svc.name} - Rp ${svc.rate.toLocaleString('id-ID')}/1000`;
+                opt.value = String(idx); // index sebagai id lokal
+                const rateLabel = item.rate ? ` - Rp ${item.rate.toLocaleString('id-ID')}/1000` : '';
+                opt.textContent = `${item.name}${rateLabel}`;
                 serviceSelect.appendChild(opt);
             });
-            
+
             // Reset harga setelah mengubah kategori
             updatePrices();
         });
 
-        // Update harga
+        // Update harga berdasarkan service terpilih dan quantity
         function updatePrices() {
-            const serviceId = document.getElementById("service").value;
-            const quantity = parseInt(document.getElementById("quantity").value) || 0;
-            const service = servicesData.find(svc => svc.service == serviceId);
+            const serviceSelect = document.getElementById("service");
+            const serviceIndex = serviceSelect.value === "" || serviceSelect.value == null ? null : Number(serviceSelect.value);
+            const quantity = Math.max(0, parseInt(document.getElementById("quantity").value) || 0);
+            const service = (serviceIndex !== null && !isNaN(serviceIndex)) ? servicesData[serviceIndex] : null;
+
+            document.getElementById("quantityDisplay").textContent = quantity.toLocaleString('id-ID');
 
             if (service) {
-                const basePrice = Math.round((service.rate * quantity) / 1000);
+                const rate = Number(service.rate) || 0;
+                const basePrice = Math.round((rate * quantity) / 1000);
                 const markup = getMarkup(basePrice);
                 const finalTotal = basePrice + markup;
 
-                document.getElementById("pricePerK").textContent = `Rp ${service.rate.toLocaleString('id-ID')}`;
-                document.getElementById("quantityDisplay").textContent = quantity.toLocaleString('id-ID');
+                document.getElementById("pricePerK").textContent = `Rp ${rate.toLocaleString('id-ID')}`;
                 document.getElementById("totalPrice").textContent = `Rp ${basePrice.toLocaleString('id-ID')}`;
                 document.getElementById("finalPrice").textContent = `Rp ${finalTotal.toLocaleString('id-ID')}`;
             } else {
-                // Reset jika tidak ada layanan yang dipilih
                 document.getElementById("pricePerK").textContent = "Rp 0";
-                document.getElementById("quantityDisplay").textContent = "0";
                 document.getElementById("totalPrice").textContent = "Rp 0";
                 document.getElementById("finalPrice").textContent = "Rp 0";
             }
@@ -553,20 +622,18 @@
         document.getElementById("service").addEventListener("change", updatePrices);
         document.getElementById("quantity").addEventListener("input", updatePrices);
 
-        // Kirim pesan ke Telegram
-        async function sendToTelegram(service, quantity, target, whatsapp, total) {
-            const message = `
-🛒 *Pesanan Baru*
+        // Kirim pesan ke Telegram (tetap di client: peringatan CORS & keamanan)
+        async function sendToTelegram(serviceName, quantity, target, whatsapp, total) {
+            const message = `🛒 *Pesanan Baru*
 ━━━━━━━━━━━━━━━
-📌 Layanan: ${service}
+📌 Layanan: ${serviceName}
 📦 Jumlah: ${quantity}
 🎯 Target: ${target}
 📱 WhatsApp: ${whatsapp}
 💰 Total: Rp ${total.toLocaleString('id-ID')}
             `;
-            
             try {
-                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -575,30 +642,40 @@
                         parse_mode: "Markdown"
                     })
                 });
-                return true;
+                if (!res.ok) {
+                    console.warn("Telegram API response not ok:", res.status);
+                    return false;
+                }
+                const j = await res.json();
+                return j && j.ok === true;
             } catch (error) {
                 console.error("Error sending to Telegram:", error);
                 return false;
             }
         }
 
-        // Tombol order
+        // Tombol order: gunakan index lookup
         document.getElementById("orderBtn").addEventListener("click", async () => {
-            const serviceId = document.getElementById("service").value;
-            const quantity = parseInt(document.getElementById("quantity").value) || 0;
-            const target = document.getElementById("target").value;
-            const whatsapp = document.getElementById("whatsapp").value;
-            const service = servicesData.find(svc => svc.service == serviceId);
-
-            if (!serviceId) {
+            const serviceIndexRaw = document.getElementById("service").value;
+            if (serviceIndexRaw === "" || serviceIndexRaw == null) {
                 alert("Silakan pilih layanan terlebih dahulu!");
                 return;
             }
+            const serviceIndex = Number(serviceIndexRaw);
+            const service = servicesData[serviceIndex];
+            if (!service) {
+                alert("Layanan tidak ditemukan. Silakan pilih layanan lain.");
+                return;
+            }
 
+            const quantity = Math.max(0, parseInt(document.getElementById("quantity").value) || 0);
             if (quantity < 100) {
                 alert("Jumlah minimal adalah 100!");
                 return;
             }
+
+            const target = document.getElementById("target").value.trim();
+            const whatsapp = document.getElementById("whatsapp").value.trim();
 
             if (!target) {
                 alert("Silakan masukkan link target!");
@@ -610,32 +687,36 @@
                 return;
             }
 
-            const basePrice = Math.round((service.rate * quantity) / 1000);
+            const basePrice = Math.round((Number(service.rate) * quantity) / 1000);
             const finalTotal = basePrice + getMarkup(basePrice);
 
-            // Show loading
+            // Show loading state
             const orderBtn = document.getElementById("orderBtn");
             const originalText = orderBtn.innerHTML;
             orderBtn.innerHTML = 'Memproses... <i class="fas fa-spinner fa-spin"></i>';
             orderBtn.disabled = true;
 
-            // Kirim ke Telegram
+            // Kirim notifikasi ke Telegram (jika gagal, tetap lanjut dan beritahu user)
             const success = await sendToTelegram(service.name, quantity, target, whatsapp, finalTotal);
-            
+
             if (success) {
                 alert("Pesanan berhasil dibuat! Detail sudah dikirim ke Telegram.");
             } else {
-                alert("Pesanan berhasil dibuat tetapi gagal mengirim notifikasi ke Telegram.");
+                alert("Pesanan dibuat tetapi notifikasi Telegram gagal terkirim. Silakan cek konfigurasi BOT_TOKEN/CHAT_ID atau gunakan server-side proxy.");
             }
-            
+
             // Reset button
             orderBtn.innerHTML = originalText;
             orderBtn.disabled = false;
         });
 
-        // Load data layanan saat halaman dimuat
+        // Inisialisasi saat DOM siap
         document.addEventListener('DOMContentLoaded', function() {
+            // Load services; tombol order dan service akan di-enable setelah data tersedia atau fallback di-load
             loadServices();
+
+            // Update harga awal sesuai default quantity (tetapi service belum terpilih)
+            updatePrices();
         });
     </script>
 </body>

@@ -1,866 +1,637 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Xyzopedia - Layanan Digital</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
-  <style>
-    :root {
-      --primary: #5865F2;
-      --primary-dark: #4752C4;
-      --secondary: #f4f6f9;
-      --light: #ffffff;
-      --dark: #1e1f22;
-      --darker: #121215;
-      --dark-text: #dbdee1;
-      --success: #3BA55D;
-      --danger: #ED4245;
-      --warning: #FAA61A;
-      --reseller: #FF9F43;
-      --card-bg: #ffffff;
-      --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .dark-mode {
-      --primary: #5865F2;
-      --primary-dark: #4752C4;
-      --secondary: #2b2d31;
-      --light: #1e1f22;
-      --dark: #dbdee1;
-      --darker: #121215;
-      --dark-text: #dbdee1;
-      --card-bg: #2b2d31;
-      --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
-
-    body {
-      background-color: var(--secondary);
-      color: #333;
-      line-height: 1.6;
-      transition: var(--transition);
-    }
-
-    body.dark-mode {
-      background-color: var(--darker);
-      color: var(--dark-text);
-    }
-
-    header {
-      background-color: var(--darker);
-      padding: 1rem 0;
-      color: white;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      transition: var(--transition);
-    }
-
-    .dark-mode header {
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    }
-
-    .container {
-      width: 90%;
-      max-width: 1200px;
-      margin: auto;
-    }
-
-    .header-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-    }
-
-    .logo i {
-      font-size: 2rem;
-      margin-right: 0.5rem;
-      color: var(--primary);
-    }
-
-    .logo-text h1 {
-      font-size: 1.5rem;
-      margin-bottom: 0;
-      color: white;
-    }
-
-    .logo-text p {
-      color: var(--dark-text);
-      font-size: 0.9rem;
-    }
-
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 1.5rem;
-    }
-
-    nav ul li a {
-      color: var(--dark-text);
-      text-decoration: none;
-      font-weight: 500;
-      transition: var(--transition);
-    }
-
-    nav ul li a:hover {
-      color: var(--primary);
-    }
-
-    .mobile-menu-btn {
-      display: none;
-      background: none;
-      border: none;
-      color: var(--dark-text);
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-
-    .theme-toggle {
-      background: rgba(255, 255, 255, 0.1);
-      border: none;
-      color: white;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: var(--transition);
-      margin-left: 1rem;
-    }
-
-    .theme-toggle:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: rotate(30deg);
-    }
-
-    .hero {
-      background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), 
-                  url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-      color: white;
-      padding: 6rem 0;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, var(--primary), rgba(88, 101, 242, 0.7));
-      opacity: 0.3;
-      z-index: 0;
-    }
-
-    .hero .container {
-      position: relative;
-      z-index: 1;
-    }
-
-    .hero h2 {
-      font-size: 2.5rem;
-      margin-bottom: 1.5rem;
-      font-weight: 700;
-      animation: fadeInUp 0.8s ease;
-    }
-
-    .hero p {
-      font-size: 1.25rem;
-      max-width: 700px;
-      margin: 0 auto 2.5rem;
-      opacity: 0.9;
-      animation: fadeInUp 0.8s ease 0.2s forwards;
-      opacity: 0;
-    }
-
-    .cta-button {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: var(--primary);
-      color: white;
-      padding: 0.9rem 2rem;
-      border-radius: 50px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: var(--transition);
-      animation: fadeInUp 0.8s ease 0.4s forwards;
-      opacity: 0;
-      border: 2px solid transparent;
-    }
-
-    .cta-button:hover {
-      background: var(--primary-dark);
-      transform: translateY(-3px);
-      box-shadow: 0 10px 20px rgba(88, 101, 242, 0.3);
-    }
-
-    .services {
-      padding: 5rem 0;
-      background-color: var(--secondary);
-    }
-
-    .dark-mode .services {
-      background-color: var(--darker);
-    }
-
-    .section-title h2 {
-      text-align: center;
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      color: var(--dark);
-      position: relative;
-      display: inline-block;
-    }
-
-    .section-title h2::after {
-      content: '';
-      position: absolute;
-      bottom: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80px;
-      height: 4px;
-      background: var(--primary);
-      border-radius: 2px;
-    }
-
-    .dark-mode .section-title h2 {
-      color: var(--dark-text);
-    }
-
-    .section-title p {
-      color: #666;
-      max-width: 600px;
-      margin: 0 auto;
-      font-size: 1.1rem;
-      text-align: center;
-    }
-
-    .dark-mode .section-title p {
-      color: #aaa;
-    }
-
-    .services-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2rem;
-      justify-content: center;
-      margin-top: 3rem;
-    }
-
-    .service-card {
-      background: var(--card-bg);
-      padding: 2rem;
-      width: 300px;
-      border-radius: 12px;
-      text-align: center;
-      box-shadow: var(--card-shadow);
-      transition: var(--transition);
-      border: 1px solid rgba(0, 0, 0, 0.05);
-    }
-
-    .dark-mode .service-card {
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .service-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .dark-mode .service-card:hover {
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    .service-icon i {
-      font-size: 2.5rem;
-      color: var(--primary);
-      margin-bottom: 1rem;
-    }
-
-    .service-card h3 {
-      margin-bottom: 1rem;
-      color: var(--dark);
-    }
-
-    .dark-mode .service-card h3 {
-      color: var(--dark-text);
-    }
-
-    .service-card p {
-      color: #666;
-      font-size: 0.95rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .dark-mode .service-card p {
-      color: #aaa;
-    }
-
-    .order-button {
-      display: inline-block;
-      background: var(--primary);
-      color: white;
-      padding: 0.6rem 1.5rem;
-      border-radius: 50px;
-      text-decoration: none;
-      font-weight: 500;
-      margin-top: 1rem;
-      transition: var(--transition);
-      border: 2px solid transparent;
-    }
-
-    .order-button:hover {
-      background: var(--primary-dark);
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(88, 101, 242, 0.3);
-    }
-
-    .dark-mode .order-button {
-      color: white;
-    }
-
-    .about {
-      padding: 5rem 0;
-      background-color: var(--card-bg);
-    }
-
-    .dark-mode .about {
-      background-color: var(--light);
-    }
-
-    .about-content {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 3rem;
-    }
-
-    .about-text {
-      flex: 1;
-      min-width: 300px;
-    }
-
-    .about-text h2 {
-      font-size: 2.5rem;
-      margin-bottom: 1.5rem;
-      color: var(--dark);
-    }
-
-    .dark-mode .about-text h2 {
-      color: var(--dark-text);
-    }
-
-    .about-text p {
-      color: #666;
-      margin-bottom: 1rem;
-      font-size: 1.1rem;
-    }
-
-    .dark-mode .about-text p {
-      color: #aaa;
-    }
-
-    .about-image {
-      flex: 1;
-      min-width: 300px;
-      text-align: center;
-    }
-
-    .about-image img {
-      width: 100%;
-      max-width: 500px;
-      border-radius: 12px;
-      box-shadow: var(--card-shadow);
-    }
-
-    .contact {
-      padding: 5rem 0;
-      background-color: var(--secondary);
-    }
-
-    .dark-mode .contact {
-      background-color: var(--darker);
-    }
-
-    .contact-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2rem;
-      margin-top: 3rem;
-    }
-
-    .contact-info {
-      flex: 1;
-      min-width: 300px;
-    }
-
-    .contact-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 1.5rem;
-      padding: 1rem;
-      background: var(--card-bg);
-      border-radius: 8px;
-      box-shadow: var(--card-shadow);
-      transition: var(--transition);
-    }
-
-    .contact-item:hover {
-      transform: translateY(-3px);
-    }
-
-    .contact-icon i {
-      font-size: 1.5rem;
-      margin-right: 1rem;
-      color: var(--primary);
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(88, 101, 242, 0.1);
-      border-radius: 50%;
-    }
-
-    .contact-text h4 {
-      color: var(--dark);
-      margin-bottom: 0.3rem;
-    }
-
-    .dark-mode .contact-text h4 {
-      color: var(--dark-text);
-    }
-
-    .contact-text p, .contact-text a {
-      color: #666;
-      text-decoration: none;
-    }
-
-    .dark-mode .contact-text p, 
-    .dark-mode .contact-text a {
-      color: #aaa;
-    }
-
-    footer {
-      background-color: var(--darker);
-      color: var(--dark-text);
-      padding: 4rem 0 0;
-    }
-
-    .footer-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 3rem;
-      margin-bottom: 3rem;
-    }
-
-    .footer-col {
-      margin-bottom: 2rem;
-    }
-
-    .footer-col h3 {
-      color: white;
-      font-size: 1.3rem;
-      margin-bottom: 1.5rem;
-      position: relative;
-      padding-bottom: 0.8rem;
-    }
-
-    .footer-col h3::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 50px;
-      height: 3px;
-      background: var(--primary);
-      border-radius: 3px;
-    }
-
-    .footer-logo {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      font-size: 1.4rem;
-      font-weight: 700;
-      margin-top: 1.5rem;
-      color: white;
-    }
-
-    .footer-logo i {
-      color: var(--primary);
-      font-size: 1.6rem;
-    }
-
-    .footer-links {
-      list-style: none;
-    }
-
-    .footer-links li {
-      margin-bottom: 0.8rem;
-    }
-
-    .footer-links a {
-      color: #aaa;
-      text-decoration: none;
-      transition: var(--transition);
-      display: inline-block;
-      padding: 0.2rem 0;
-    }
-
-    .footer-links a:hover {
-      color: var(--primary);
-      transform: translateX(8px);
-    }
-
-    .social-links {
-      display: flex;
-      gap: 1rem;
-      margin: 1.5rem 0 2rem;
-    }
-
-    .social-link {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
-      font-size: 1.2rem;
-      transition: var(--transition);
-    }
-
-    .social-link:hover {
-      background: var(--primary);
-      transform: translateY(-5px) scale(1.1);
-      box-shadow: 0 5px 15px rgba(88, 101, 242, 0.3);
-    }
-
-    .footer-bottom {
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      padding-top: 2rem;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .copyright {
-      color: #777;
-      font-size: 0.85rem;
-    }
-
-    @keyframes fadeInUp {
-      from {
-          opacity: 0;
-          transform: translateY(20px);
-      }
-      to {
-          opacity: 1;
-          transform: translateY(0);
-      }
-    }
-
-    @media (max-width: 768px) {
-      .header-content {
-        flex-direction: row;
-      }
-
-      nav ul {
-        display: none;
-        position: absolute;
-        top: 70px;
-        left: 0;
-        width: 100%;
-        background: var(--darker);
-        flex-direction: column;
-        padding: 1rem;
-        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
-      }
-
-      nav ul.show {
-        display: flex;
-      }
-
-      .mobile-menu-btn {
-        display: block;
-      }
-
-      .hero h2 {
-        font-size: 2rem;
-      }
-
-      .hero p {
-        font-size: 1.1rem;
-      }
-
-      .section-title h2 {
-        font-size: 2rem;
-      }
-
-      .footer-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .footer-bottom {
-        flex-direction: column;
-        text-align: center;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suntik Sosmed - XYZOPEDIA.ID</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --bg-dark: #0A1128;
+            --bg-gradient: linear-gradient(135deg, #001F54, #0A1128);
+            --primary: #034078;
+            --primary-alt: #1282A2;
+            --accent: #4CC9F0;
+            --text-light: #E0FBFC;
+            --text: #FDFDFF;
+            --border: rgba(3, 64, 120, 0.4);
+            --card-bg: rgba(0, 31, 84, 0.8);
+            --error: #E74C3C;
+            --success: #2ECC71;
+            --warning: #F1C40F;
+            --shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            --card-shadow-hover: 0 12px 30px rgba(3, 64, 120, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--text);
+            overflow-x: hidden;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--bg-gradient);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            border-bottom: 1px solid var(--border);
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            color: var(--accent);
+            font-size: 2.2rem;
+            animation: rotateIn 1.5s ease-out forwards;
+        }
+
+        .logo-text {
+            position: relative;
+        }
+
+        .logo-text span {
+            color: var(--primary-alt);
+        }
+
+        .logo-text::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .logo:hover .logo-text::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--card-bg);
+            border-radius: 18px;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+
+        .card:hover {
+            transform: translateY(-12px) scale(1.03);
+            box-shadow: 0 15px 35px rgba(3, 64, 120, 0.6);
+            border-color: var(--primary-alt);
+        }
+
+        .header {
+            background: var(--bg-gradient);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+            font-weight: 300;
+            color: var(--text-light);
+        }
+
+        .form-container {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background-color: rgba(0, 0, 0, 0.4);
+            color: var(--text);
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-alt);
+            box-shadow: 0 0 0 3px rgba(18, 130, 162, 0.3);
+        }
+
+        /* Price Display */
+        .price-display {
+            display: flex;
+            justify-content: space-between;
+            background: linear-gradient(to right, rgba(30, 136, 229, 0.1), rgba(33, 150, 243, 0.1));
+            padding: 20px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border: 2px dashed var(--primary-alt);
+        }
+
+        .price-item {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .price-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 40px;
+            width: 2px;
+            background: linear-gradient(to bottom, transparent, var(--primary-alt), transparent);
+        }
+
+        .price-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+
+        .price-value {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--accent);
+        }
+
+        /* Button Styles */
+        .btn {
+            display: block;
+            width: 100%;
+            background: var(--primary-alt);
+            color: var(--bg-dark);
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            text-decoration: none;
+            margin-top: 25px;
+            box-shadow: 0 5px 15px rgba(18, 130, 162, 0.4);
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(18, 130, 162, 0.6);
+        }
+
+        .service-info {
+            background: linear-gradient(to right, rgba(30, 136, 229, 0.1), rgba(33, 150, 243, 0.1));
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 4px solid var(--primary-alt);
+            font-size: 0.95rem;
+        }
+
+        .service-info p {
+            margin: 8px 0;
+            color: var(--text-light);
+        }
+
+        .service-info ul {
+            padding-left: 20px;
+            margin: 8px 0;
+        }
+
+        .service-info li {
+            margin-bottom: 8px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .total-price {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: linear-gradient(to right, rgba(30, 136, 229, 0.1), rgba(33, 150, 243, 0.1));
+            border-radius: 12px;
+            border: 2px solid var(--primary-alt);
+        }
+
+        .total-label {
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+
+        .total-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .note {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 8px;
+            font-style: italic;
+            font-weight: 300;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes rotateIn {
+            from { transform: rotateY(90deg) scale(0); opacity: 0; }
+            to { transform: rotateY(0) scale(1); opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .price-display {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .price-item:not(:last-child)::after {
+                display: none;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .total-value {
+                font-size: 1.5rem;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <div class="container header-content">
-      <div class="logo">
-        <i class="fas fa-gamepad"></i>
-        <div class="logo-text">
-          <h1>Xyzopedia</h1>
-          <p>Layanan Digital Premium</p>
-        </div>
-      </div>
-      <div style="display: flex; align-items: center;">
-        <nav>
-          <ul id="nav-menu">
-            <li><a href="#home">Beranda</a></li>
-            <li><a href="#services">Layanan</a></li>
-            <li><a href="#about">Tentang</a></li>
-            <li><a href="#contact">Kontak</a></li>
-          </ul>
-        </nav>
-        <button class="theme-toggle" id="themeToggle">
-          <i class="fas fa-moon"></i>
-        </button>
-        <button class="mobile-menu-btn" id="mobile-menu-btn"><i class="fas fa-bars"></i></button>
-      </div>
-    </div>
-  </header>
+    <header>
+        <a href="#" class="logo">
+            <i class="fas fa-gamepad logo-icon"></i>
+            <div class="logo-text">xyzo<span>pedia</span>.id</div>
+        </a>
+    </header>
 
-  <section class="hero" id="home">
-    <div class="hero-content container">
-      <h2>Solusi Digital Terbaik untuk Kebutuhan Anda</h2>
-      <p>Kami menyediakan layanan digital premium dengan harga terjangkau dan pelayanan terbaik.</p>
-      <a href="#services" class="cta-button">Lihat Layanan</a>
-    </div>
-  </section>
-
-  <section class="services" id="services">
     <div class="container">
-      <div class="section-title">
-        <h2>Layanan Kami</h2>
-        <p>Berbagai layanan digital premium untuk kebutuhan Anda</p>
-      </div>
-      <div class="services-grid">
-        <div class="service-card">
-          <div class="service-icon"><i class="fas fa-mobile-alt"></i></div>
-          <h3>Aplikasi Premium</h3>
-          <p>Berbagai aplikasi premium seperti YouTube Premium, Spotify, dan lainnya.</p>
-          <a href="apk.html" class="order-button">Order Now</a>
-        </div>
-        <div class="service-card">
-          <div class="service-icon"><i class="fas fa-heart"></i></div>
-          <h3>Layanan Social Media</h3>
-          <p>Kebutuhan Social media Seperti Like,Follower dan lain lain,Suntik social media secara instan.</p>
-          <a href="suntik.html" class="order-button">Order Now</a>
-        </div>
-        <div class="service-card">
-          <div class="service-icon"><i class="fas fa-sim-card"></i></div>
-          <h3>Layanan Nokos</h3>
-          <p>Dapatkan nomor virtual untuk verifikasi WhatsApp dengan cepat dan praktis.</p>
-          <a href="nokos.html" class="order-button">Order Now</a>
-        </div>
-        <div class="service-card">
-          <div class="service-icon"><i class="fas fa-server"></i></div>
-          <h3>Panel Pterodactyl</h3>
-          <p>Sewa panel hosting game & bot Discord,Bot WhatsApp dengan murah dan cepat.</p>
-          <a href="panel.html" class="order-button">Order Now</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="about" id="about">
-    <div class="container about-content">
-      <div class="about-text">
-        <h2>Tentang Kami</h2>
-        <p>Xyzopedia adalah penyedia layanan digital terpercaya yang telah membantu ribuan pengguna mendapatkan akses layanan premium secara mudah dan cepat.</p>
-        <p>Kami berkomitmen memberikan pelayanan terbaik dengan kualitas terjamin dan harga bersahabat.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="contact" id="contact">
-    <div class="container">
-      <div class="section-title">
-        <h2>Kontak Kami</h2>
-        <p>Hubungi kami untuk informasi lebih lanjut</p>
-      </div>
-      <div class="contact-grid">
-        <div class="contact-info">
-          <div class="contact-item">
-            <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
-            <div class="contact-text">
-              <h4>Telepon</h4>
-              <p>+62 851-8913-9082</p>
+        <div class="card">
+            <div class="header">
+                <h1>Order Layanan SMM</h1>
+                <p>Tingkatkan engagement sosial media Anda dengan layanan kami</p>
             </div>
-          </div>
-          <div class="contact-item">
-            <div class="contact-icon"><i class="fas fa-envelope"></i></div>
-            <div class="contact-text">
-              <h4>Email</h4>
-              <a href="mailto:xyzopedia@gmail.com">xyzopedia@gmail.com</a>
+            
+            <div class="form-container">
+                <div class="form-group">
+                    <label for="category">Pilih Kategori</label>
+                    <select class="form-control" id="category">
+                        <option value="" disabled selected>-- Pilih Kategori --</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="service">Pilih Layanan</label>
+                    <select class="form-control" id="service">
+                        <option value="" disabled selected>-- Pilih Layanan --</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="quantity">Jumlah</label>
+                    <input type="number" class="form-control" id="quantity" min="100" step="100" value="1000">
+                </div>
+                
+                <div class="price-display">
+                    <div class="price-item">
+                        <div class="price-label">Harga/1000</div>
+                        <div class="price-value" id="pricePerK">Rp 0</div>
+                    </div>
+                    <div class="price-item">
+                        <div class="price-label">Jumlah</div>
+                        <div class="price-value" id="quantityDisplay">0</div>
+                    </div>
+                    <div class="price-item">
+                        <div class="price-label">Total Dasar</div>
+                        <div class="price-value" id="totalPrice">Rp 0</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="target">Link Target</label>
+                    <input type="text" class="form-control" id="target" placeholder="https://instagram.com/username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="whatsapp">Nomor WhatsApp</label>
+                    <input type="text" class="form-control" id="whatsapp" placeholder="08xxxxxxxxxx">
+                </div>
+                
+                <div class="service-info">
+                    <p><strong>Informasi Layanan:</strong></p>
+                    <ul>
+                        <li>Mulai diproses dalam 5-15 menit setelah pembayaran</li>
+                        <li>Garansi 30 hari untuk drop (kecuali stated otherwise)</li>
+                        <li>Proses natural dan aman untuk akun Anda</li>
+                        <li>Dukungan pelanggan 24/7</li>
+                    </ul>
+                </div>
+                
+                <div class="total-price">
+                    <div class="total-label">Total Pembayaran (Termasuk Markup)</div>
+                    <div class="total-value" id="finalPrice">Rp 0</div>
+                    <div class="note">*Harga sudah termasuk PPN</div>
+                </div>
+                
+                <button class="btn" id="orderBtn">
+                    Pesan Sekarang <i class="fas fa-arrow-right"></i>
+                </button>
             </div>
-          </div>
-          <div class="contact-item">
-            <div class="contact-icon"><i class="fab fa-whatsapp"></i></div>
-            <div class="contact-text">
-              <h4>WhatsApp</h4>
-              <a href="https://wa.me/6285189139082" target="_blank">Chat Sekarang</a>
-            </div>
-          </div>
-          <div class="contact-item">
-            <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
-            <div class="contact-text">
-              <h4>Alamat</h4>
-              <p>Jawa Barat, Tasikmalaya</p>
-            </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-col">
-          <h3>Mengapa Harus Xyzopedia</h3>
-          <p>Penyedia layanan digital premium dengan performa tinggi dan harga terjangkau.</p>
-        <div class="footer-col">
-          <h3>Link Cepat</h3>
-          <ul class="footer-links">
-            <li><a href="#home">Beranda</a></li>
-            <li><a href="#services">Layanan</a></li>
-            <li><a href="#about">Tentang</a></li>
-            <li><a href="#contact">Kontak</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-col">
-          <h3>Media Sosial</h3>
-          <div class="social-links">
-            <a href="https://wa.me/6285189139082" target="_blank" title="WhatsApp">
-              <i class="fab fa-whatsapp"></i>
-            </a>
-            <a href="#" target="_blank" title="Instagram">
-              <i class="fab fa-instagram"></i>
-            </a>
-                        <a href="#" target="_blank" title="Tiktok">
-              <i class="fab fa-tiktok"></i>
-              </a>
-          </div>
-        </div>
-      </div>
-      
-      <div class="footer-bottom">
-        <div class="copyright">
-          &copy; 2025 XyzopediaMarket. All Rights Reserved.
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <script>
-    // Theme Toggle Functionality
-    const themeToggle = document.getElementById('themeToggle');
-    const body = document.body;
-
-    // Check for saved theme preference or use preferred color scheme
-    const savedTheme = localStorage.getItem('theme') || 
-                    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-
-    // Apply the saved theme
-    if (savedTheme === 'dark') {
-        body.classList.add('dark-mode');
-        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-    } else {
-        body.classList.remove('dark-mode');
-        themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-    }
-
-    // Toggle theme on button click
-    themeToggle.addEventListener('click', () => {
-        body.classList.toggle('dark-mode');
         
-        // Update icon and save preference
-        if (body.classList.contains('dark-mode')) {
-            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            localStorage.setItem('theme', 'dark');
-        } else {
-            themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-            localStorage.setItem('theme', 'light');
+        <div class="footer">
+            <p>&copy; 2023 XYZOPEDIA.ID - Layanan Peningkatan Sosial Media</p>
+        </div>
+    </div>
+
+    <script>
+        // Konfigurasi Telegram
+        const BOT_TOKEN = "ISI_TOKEN_BOT_KAMU";
+        const CHAT_ID = "ISI_CHAT_ID_KAMU";
+        let servicesData = [];
+
+        // Aturan markup
+        function getMarkup(basePrice) {
+            if (basePrice < 100) return 50;
+            if (basePrice < 1000) return 100;
+            if (basePrice < 2000) return 300;
+            if (basePrice < 5000) return 1000;
+            if (basePrice < 10000) return 2000;
+            if (basePrice < 20000) return 3000;
+            if (basePrice < 30000) return 4000;
+            if (basePrice < 40000) return 5000;
+            if (basePrice < 50000) return 6000;
+            let extra = Math.floor((basePrice - 50000) / 10000) * 1000;
+            return 6000 + extra;
         }
-    });
 
-    // Mobile menu toggle
-    const menuBtn = document.getElementById('mobile-menu-btn');
-    const navMenu = document.getElementById('nav-menu');
-    menuBtn.addEventListener('click', () => {
-      navMenu.classList.toggle('show');
-    });
+        // Ambil data layanan dari Medanpedia
+        async function loadServices() {
+            try {
+                const res = await fetch("https://api.medanpedia.co.id/services", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" }
+                });
+                const data = await res.json();
+                servicesData = data;
 
-    // Smooth scrolling for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        
-        const targetId = this.getAttribute('href');
-        if (targetId === '#') return;
-        
-        const targetElement = document.querySelector(targetId);
-        if (targetElement) {
-          window.scrollTo({
-            top: targetElement.offsetTop - 80,
-            behavior: 'smooth'
-          });
+                const categories = [...new Set(data.map(item => item.category))];
+                const categorySelect = document.getElementById("category");
+                categories.forEach(cat => {
+                    let opt = document.createElement("option");
+                    opt.value = cat;
+                    opt.textContent = cat;
+                    categorySelect.appendChild(opt);
+                });
+            } catch (err) {
+                console.error("Gagal load services:", err);
+                alert("Gagal memuat daftar layanan. Silakan refresh halaman.");
+            }
         }
-      });
-    });
 
-    // WhatsApp pre-filled message
-    document.querySelectorAll('[href^="https://wa.me/"]').forEach(link => {
-      if (!link.getAttribute('href').includes('?text=')) {
-        link.setAttribute('href', link.getAttribute('href') + '?text=Halo,%20saya%20ingin%20bertanya%20tentang%20layanan%20Xyzopedia');
-      }
-    });
-  </script>
+        // Isi layanan sesuai kategori
+        document.getElementById("category").addEventListener("change", function() {
+            const selectedCategory = this.value;
+            const serviceSelect = document.getElementById("service");
+            serviceSelect.innerHTML = '<option value="" disabled selected>-- Pilih Layanan --</option>';
+            
+            const filtered = servicesData.filter(item => item.category === selectedCategory);
+            filtered.forEach(svc => {
+                let opt = document.createElement("option");
+                opt.value = svc.service;
+                opt.textContent = `${svc.name} - Rp ${svc.rate.toLocaleString('id-ID')}/1000`;
+                serviceSelect.appendChild(opt);
+            });
+            
+            // Reset harga setelah mengubah kategori
+            updatePrices();
+        });
+
+        // Update harga
+        function updatePrices() {
+            const serviceId = document.getElementById("service").value;
+            const quantity = parseInt(document.getElementById("quantity").value) || 0;
+            const service = servicesData.find(svc => svc.service == serviceId);
+
+            if (service) {
+                const basePrice = Math.round((service.rate * quantity) / 1000);
+                const markup = getMarkup(basePrice);
+                const finalTotal = basePrice + markup;
+
+                document.getElementById("pricePerK").textContent = `Rp ${service.rate.toLocaleString('id-ID')}`;
+                document.getElementById("quantityDisplay").textContent = quantity.toLocaleString('id-ID');
+                document.getElementById("totalPrice").textContent = `Rp ${basePrice.toLocaleString('id-ID')}`;
+                document.getElementById("finalPrice").textContent = `Rp ${finalTotal.toLocaleString('id-ID')}`;
+            } else {
+                // Reset jika tidak ada layanan yang dipilih
+                document.getElementById("pricePerK").textContent = "Rp 0";
+                document.getElementById("quantityDisplay").textContent = "0";
+                document.getElementById("totalPrice").textContent = "Rp 0";
+                document.getElementById("finalPrice").textContent = "Rp 0";
+            }
+        }
+
+        // Event listeners untuk service dan quantity
+        document.getElementById("service").addEventListener("change", updatePrices);
+        document.getElementById("quantity").addEventListener("input", updatePrices);
+
+        // Kirim pesan ke Telegram
+        async function sendToTelegram(service, quantity, target, whatsapp, total) {
+            const message = `
+🛒 *Pesanan Baru*
+━━━━━━━━━━━━━━━
+📌 Layanan: ${service}
+📦 Jumlah: ${quantity}
+🎯 Target: ${target}
+📱 WhatsApp: ${whatsapp}
+💰 Total: Rp ${total.toLocaleString('id-ID')}
+            `;
+            
+            try {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: message,
+                        parse_mode: "Markdown"
+                    })
+                });
+                return true;
+            } catch (error) {
+                console.error("Error sending to Telegram:", error);
+                return false;
+            }
+        }
+
+        // Tombol order
+        document.getElementById("orderBtn").addEventListener("click", async () => {
+            const serviceId = document.getElementById("service").value;
+            const quantity = parseInt(document.getElementById("quantity").value) || 0;
+            const target = document.getElementById("target").value;
+            const whatsapp = document.getElementById("whatsapp").value;
+            const service = servicesData.find(svc => svc.service == serviceId);
+
+            if (!serviceId) {
+                alert("Silakan pilih layanan terlebih dahulu!");
+                return;
+            }
+
+            if (quantity < 100) {
+                alert("Jumlah minimal adalah 100!");
+                return;
+            }
+
+            if (!target) {
+                alert("Silakan masukkan link target!");
+                return;
+            }
+
+            if (!whatsapp) {
+                alert("Silakan masukkan nomor WhatsApp!");
+                return;
+            }
+
+            const basePrice = Math.round((service.rate * quantity) / 1000);
+            const finalTotal = basePrice + getMarkup(basePrice);
+
+            // Show loading
+            const originalText = orderBtn.innerHTML;
+            orderBtn.innerHTML = 'Memproses... <i class="fas fa-spinner fa-spin"></i>';
+            orderBtn.disabled = true;
+
+            // Kirim ke Telegram
+            const success = await sendToTelegram(service.name, quantity, target, whatsapp, finalTotal);
+            
+            if (success) {
+                alert("Pesanan berhasil dibuat! Detail sudah dikirim ke Telegram.");
+            } else {
+                alert("Pesanan berhasil dibuat tetapi gagal mengirim notifikasi ke Telegram.");
+            }
+            
+            // Reset button
+            orderBtn.innerHTML = originalText;
+            orderBtn.disabled = false;
+        });
+
+        // Load data layanan saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            loadServices();
+        });
+    </script>
 </body>
 </html>
